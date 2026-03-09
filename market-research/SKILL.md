@@ -1,9 +1,10 @@
 ---
 name: market-research
 description: |
-  Thu thập data thị trường thật để feed vào Product Tower T1-T9.
-  Product Tower Tầng 0 (Data Foundation). NotebookLM = RAG hub chính,
-  mỗi tầng 1 notebook riêng. Extract → .md → Product Tower consume.
+  Thu thập data thị trường để feed vào Product Tower T1-T9.
+  Product Tower Tầng 0 (Data Foundation). 2 modes:
+  EXPRESS (AI tự cook) hoặc PRO (NotebookLM RAG hub).
+  Output: data/*.md → Product Tower T1-T9 consume trực tiếp.
 triggers:
   - "research market"
   - "thu thập data"
@@ -16,15 +17,89 @@ triggers:
 
 ## VAI TRÒ
 
-**Market Research Lead** — thu thập + tổ chức data thật.
+**Market Research Lead** — thu thập + tổ chức data thị trường.
 
-> **Pipeline**: NotebookLM → `notebooklm ask` → save .md → Product Tower consume
-> **Primary Tool**: `notebooklm-py` v0.3.3 (đã cài)
 > **Output**: `data/*.md` per tier → T1-T9 đọc trực tiếp
+> **2 Modes**: EXPRESS (2 phút) hoặc PRO (30-60 phút)
 
 ---
 
-## KIẾN TRÚC
+## ROUTING: EXPRESS vs PRO
+
+Khi user trigger T0, **HỎI NGAY**:
+
+```
+🔍 Market Research — Tầng 0
+
+Anh muốn chạy mode nào?
+
+🐣 EXPRESS (2 phút) — AI tự research từ knowledge.
+   Dùng khi: test nhanh, ý tưởng mới, chưa có data.
+   Output: 9 files .md (desk research quality).
+
+🦅 PRO (30-60 phút) — NotebookLM RAG pipeline.
+   Dùng khi: project thật, cần cited sources, có PDFs/reports.
+   Output: 9 files .md (real data, cited).
+
+→ Gõ "express" hoặc "pro".
+```
+
+---
+
+## MODE 1: EXPRESS 🐣 (AI Self-Research)
+
+### Khi nào dùng
+- Ý tưởng mới, cần validate nhanh
+- Chưa có data/reports
+- Muốn test Product Tower flow trước
+- Non-technical founder
+
+### Input cần từ user
+```
+1. Lĩnh vực gì? (VD: "F&B", "SaaS", "BĐS")
+2. Thị trường nào? (VD: "HCMC", "Việt Nam", "SEA")
+3. Vốn bao nhiêu? (VD: "100 triệu", "$10K")
+4. (Optional) Ý tưởng cụ thể? (VD: "cơm văn phòng delivery")
+```
+
+### AI tự generate 9 files
+```bash
+mkdir -p [project]/data
+```
+
+AI tự cook từ knowledge → output:
+
+| File | Nội dung | Từ đâu |
+|------|---------|--------|
+| `t1_target_market.md` | Market size, growth, cycle | AI knowledge + web |
+| `t2_segments.md` | 3-5 buyer segments | AI analysis |
+| `t3_filter.md` | Decision matrix, keep/discard | AI reasoning |
+| `t4_personas.md` | 2-3 personas with pain points | AI synthesis |
+| `t5_user_needs.md` | Top 7-10 needs ranked | AI ranking |
+| `t6_unmet_needs.md` | Gaps in existing solutions | AI competitive analysis |
+| `t7_pmf.md` | Demand signals, WTP, PMF gate | AI assessment |
+| `t8_features.md` | MoSCoW (budget-aware) | AI scoping |
+| `t9_user_stories.md` | INVEST stories + AC | AI writing |
+
+> ⚠️ **EXPRESS = starting point.** Data chưa validated.
+> Mỗi file ghi rõ `Source: AI-generated — cần validate`.
+> Upgrade lên PRO mode khi project serious.
+
+---
+
+## MODE 2: PRO 🦅 (NotebookLM Pipeline)
+
+### Khi nào dùng
+- Project thật, cần data có nguồn
+- Đã có PDFs, reports, URLs
+- Cần cited sources cho investor deck
+- Technical user biết CLI
+
+### Yêu cầu
+- `notebooklm-py` v0.3.3+ cài sẵn
+- `notebooklm login` đã authenticate
+
+### KIẾN TRÚC
 
 ```
 NotebookLM (5 notebooks/project)
@@ -67,7 +142,7 @@ notebooklm create "[Project] T8-9 - Feature Scope"
 
 ---
 
-## 3-PHASE WORKFLOW
+## PRO MODE: 4-PHASE WORKFLOW
 
 ### PHASE 1: SEED (30 phút)
 

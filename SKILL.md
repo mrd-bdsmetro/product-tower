@@ -69,6 +69,16 @@ không dựa cảm tính founder.
 4. **Data-Driven** — Quantitative (WHAT happened) + Qualitative (WHY happened)
 5. **Tách vai rõ ràng** — Solo founder đội nhiều mũ nhưng BIẾT mũ nào đang đội
 
+### ⚡ Scope
+
+```
+Product Tower OWN:    T0-T9 (Research → Market → User → PMF → Scope)
+Product Tower POINT:  T10-T13 (Design → Build → QA) → delegate sang skills khác
+```
+
+> Product Tower = **WHAT to build + WHY.**
+> Design/Dev/QA = **HOW to build** → handled by @ui-ux-pro-max, @clean-code, @tdd-workflow.
+
 ---
 
 ## NGUYÊN TẮC ROUTING
@@ -150,6 +160,31 @@ BUILD (→ existing skills)
 TOWER SCORE: [X]/42 | WEAKEST LINK: Tầng [N]
 NEXT ACTION: [Cụ thể — skill nào cần chạy]
 ```
+
+---
+
+## HANDOFF: T10-T13 (Out of Product Tower Scope)
+
+Khi T0-T9 hoàn thành, Product Tower **handoff** sang skills khác:
+
+```
+✅ Product Tower DONE (T0-T9)
+│
+├── T10 UX Design     → @ui-ux-pro-max   "Design UX cho [project]"
+├── T11 UI Design     → @ui-ux-pro-max   "Design UI cho [project]"
+├── T12 Development   → @clean-code       "Build MVP cho [project]"
+└── T13 QA/Testing    → @tdd-workflow      "Test [project]"
+```
+
+### Handoff Output
+Product Tower cung cấp cho T10-T13:
+- `data/t8_features.md` → UI/UX biết build features gì
+- `data/t9_user_stories.md` → Dev biết acceptance criteria
+- `data/t4_personas.md` → Designer biết user là ai
+- `data/t5_user_needs.md` → Prioritize UX flows
+
+> ⚠️ T10-T13 skills sẽ được build riêng nếu cần.
+> Hiện tại delegate sang existing skills (@ui-ux-pro-max, @clean-code, @tdd-workflow).
 
 ---
 
