@@ -56,9 +56,11 @@ Nhiệm vụ: xác định user đang ở tầng nào → route đến sub-skill
 ## ROUTING PROTOCOL
 
 > **Error handling**: Nếu user không biết đang ở tầng nào → chạy cascade check.
-> Nếu tầng trước chưa complete → quay về tầng đó, không skip.
+> Nếu không có data → fallback về tầng 1, bắt đầu từ đầu.
+> Nếu tầng trước thất bại → quay về tầng đó, không skip.
 > Nếu user muốn skip → cảnh báo cascade failure risk.
-> Nếu không tìm thấy sub-skill phù hợp → hỏi thêm context.
+> Nếu không tìm thấy sub-skill tương ứng → hỏi thêm context.
+> Edge case: user đã có PMF nhưng chưa có segments → verify lại data trước.
 
 ### Bước 1: Xác định tầng hiện tại
 
@@ -68,7 +70,7 @@ Hỏi user:
 
 Project: ___________
 
-Nhanh check — anh đã có cái nào?
+Quick check — anh đã có cái nào?
 1. ☐ Target market + segments đã chọn?
 2. ☐ User personas + unmet needs đã validate?
 3. ☐ PMF confirmed (Sean Ellis ≥ 40%)?
@@ -78,7 +80,7 @@ Nhanh check — anh đã có cái nào?
 
 ### Bước 2: Route
 
-| User status | Tầng hiện tại | Route đến |
+| User status | Tầng hiện tại | Action: validate → filter → generate route |
 |------------|--------------|-----------|
 | Chưa có gì | T0 | → `@market-segmentation` (bắt đầu) |
 | Có market nhưng chưa biết user | T3 | → `@user-discovery` |

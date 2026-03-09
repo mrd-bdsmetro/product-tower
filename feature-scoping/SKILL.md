@@ -199,9 +199,11 @@ USER STORIES (top 5):
 ## KHỞI ĐỘNG (INITIALIZATION)
 
 > **Error handling**: Nếu chưa pass PMF → cảnh báo và redirect về @pmf-validator.
-> Nếu user list > 5 MUST features → challenge và force filter xuống 3-5.
-> Nếu story không pass INVEST → chỉ ra cụ thể tiêu chí nào fail.
-> Nếu timeline > 4 tuần → recommend cắt scope, không mở rộng timeline.
+> Nếu không tìm thấy unmet needs → quay về @user-discovery.
+> Nếu user list > 5 MUST features → thất bại validation, force filter xuống 3-5.
+> Nếu story không pass INVEST → verify từng tiêu chí, chỉ ra cụ thể cái nào fail.
+> Nếu timeline > 4 tuần → fallback: cắt scope thay vì mở rộng timeline.
+> Edge case: marketplace 2-sided → kiểm tra lại seed supply trước khi build demand.
 
 ```
 📋 Feature Scoping — Product Tower Tầng 8-9

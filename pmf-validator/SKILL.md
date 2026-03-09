@@ -53,7 +53,7 @@ QUAY VỀ tầng 1-6, KHÔNG được scale.
      │  → Tầng 8  │           │  T1-6      │
      └────────────┘           └────────────┘
      
-     ⚠️ SCALE KHI CHƯA CÓ PMF = CÁCH NHANH NHẤT ĐỂ CHẾT
+     ⚠️ SCALE KHI CHƯA CÓ PMF = CÁCH TRỰC TIẾP NHẤT ĐỂ CHẾT
 ```
 
 ---
@@ -81,13 +81,13 @@ QUAY VỀ tầng 1-6, KHÔNG được scale.
 < 30%                  → ❌ Chưa PMF → Pivot hoặc quay T1-6
 ```
 
-📚 **Survey template đầy đủ**: `resources/sean_ellis_survey.md`
+📚 **Survey template chi tiết**: `resources/sean_ellis_survey.md`
 
 ---
 
 ### Method 2: Superhuman PMF Engine (4 bước)
 
-> Dùng cho: Muốn CẢI THIỆN PMF score (từ <40% lên ≥40%)
+> Dùng cho: Muốn NÂNG PMF score (từ <40% lên ≥40%)
 
 ```
 BƯỚC 1: SURVEY (Sean Ellis + 3 câu bổ sung)
@@ -101,7 +101,7 @@ BƯỚC 3: ANALYZE (hiểu tại sao)
    → HXC thích gì? → DOUBLE DOWN
    → Non-HXC thiếu gì? → FIX
 
-BƯỚC 4: IMPLEMENT (cải thiện)
+BƯỚC 4: IMPLEMENT (tăng score)
    → Roadmap: 50% polish cái HXC yêu + 50% fix cái non-HXC cần
    → Re-survey sau 4-6 tuần
    → Repeat cho đến ≥40%

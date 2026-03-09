@@ -49,7 +49,7 @@ Product Tower — sai ở đây = cascade failure toàn bộ tầng trên.
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  TẦNG 3: SEGMENT FILTER — "Loại ai ra?"                │
-│  → 3 câu hỏi kill: Đủ lớn? Serve tốt? Align strategy? │
+│  → 3 câu hỏi kill: Đủ scale? Serve đúng? Align strategy? │
 ├─────────────────────────────────────────────────────────┤
 │  TẦNG 2: MARKET SEGMENTATION — "Có những ai?"          │
 │  → Demographic + Behavioral + JTBD lens                 │
@@ -71,7 +71,7 @@ Product Tower — sai ở đây = cascade failure toàn bộ tầng trên.
             Expertise CAO          Expertise THẤP
            ┌──────────────────┬──────────────────┐
 Market     │  ✅ IDEAL         │  ⚠️ Cần partner  │
-Size LỚN   │  Đánh full force  │  hoặc học trước  │
+Size CAO   │  Đánh full force  │  hoặc học trước  │
            ├──────────────────┼──────────────────┤
 Market     │  🟡 Niche play    │  ❌ TRÁNH         │
 Size NHỎ   │  Có thể nhưng    │  Không biết +     │
@@ -82,9 +82,9 @@ Size NHỎ   │  Có thể nhưng    │  Không biết +     │
 ### 5 câu hỏi validate thị trường
 
 1. **Expertise**: "Mình BIẾT GÌ về thị trường này?" (1-5)
-2. **Market Size**: "Thị trường đủ lớn?" (dùng TAM-SAM-SOM → `resources/tam_sam_som.md`)
+2. **Market Size**: "Thị trường đủ scale?" (dùng TAM-SAM-SOM → `resources/tam_sam_som.md`)
 3. **Growth**: "Thị trường đang TĂNG hay THU HẸP?"
-4. **Competition**: "Đối thủ nhiều không? Có khoảng trống?" (→ `resources/competitive_check.md`)
+4. **Competition**: "Đối thủ dày đặc không? Có khoảng trống?" (→ `resources/competitive_check.md`)
 5. **Timing**: "Tại sao BÂY GIỜ là lúc đúng?"
 
 **Output tầng 1:** 1 thị trường cụ thể + lý do chọn
@@ -103,9 +103,9 @@ Size NHỎ   │  Có thể nhưng    │  Không biết +     │
 
 📚 **Đọc chi tiết**: `resources/jtbd_lens.md`
 
-### Quy tắc phân khúc tốt
+### Quy tắc phân khúc hiệu quả
 
-- **3-5 segments** (quá ít = chung chung, quá nhiều = không focus)
+- **3-5 segments** (quá ít = chung chung, quá 5 = không focus)
 - Mỗi segment phải có **hành vi mua KHÁC NHAU** (không chỉ khác tuổi)
 - Phải **đo lường được** (biết bao nhiêu người, chi bao nhiêu tiền)
 - Phải **tiếp cận được** (có kênh reach)
@@ -131,10 +131,10 @@ SOM = Phần mình THỰC SỰ chiếm được (1-3 năm tới)
 ### 3 câu hỏi filter (cho từng segment)
 
 ```
-1. "Segment này có ĐỦ LỚN để kiếm tiền?"
+1. "Segment này có ĐỦ SCALE để kiếm tiền?"
    → SOM quá nhỏ = LOẠI
 
-2. "Mình có THỂ serve TỐT segment này?"
+2. "Mình có THỂ serve ĐÚNG segment này?"
    → Không đủ năng lực = LOẠI (serve xấu hại hơn không serve)
 
 3. "Segment này có ALIGN với long-term strategy?"
@@ -168,7 +168,7 @@ khác biệt bởi [DIFFERENTIATOR]."
 
 ## TEMPLATE: MARKET SEGMENTATION CANVAS
 
-📚 **Canvas đầy đủ**: `resources/canvas_templates.md`
+📚 **Canvas chi tiết**: `resources/canvas_templates.md`
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -208,7 +208,7 @@ T3. FILTER RESULT
 
 > **Error handling**: Nếu user không biết expertise score → hỏi lại cụ thể.
 > Nếu thiếu data sizing → dùng ước tính top-down thay vì bỏ qua.
-> Nếu không tìm thấy segment phù hợp → quay lại validate thị trường.
+> Nếu không tìm thấy segment tương ứng → quay lại validate thị trường.
 
 ```
 📊 Market Segmentation — Product Tower Tầng 1-3

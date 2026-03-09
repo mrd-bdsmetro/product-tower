@@ -104,7 +104,7 @@ Cho mỗi persona (2-4 personas):
 │   • [Metric thành công cá nhân]                 │
 │                                                 │
 │ PAIN POINTS:                                    │
-│   • [Vấn đề lớn nhất — đau ở đâu?]             │
+│   • [Vấn đề #1 — đau ở đâu?]                │
 │   • [Chi phí hiện tại cho vấn đề này]           │
 │                                                 │
 │ TOUCHPOINTS:                                    │
@@ -114,7 +114,7 @@ Cho mỗi persona (2-4 personas):
 └─────────────────────────────────────────────────┘
 ```
 
-📚 **Persona templates đầy đủ**: `resources/persona_templates.md`
+📚 **Persona templates chi tiết**: `resources/persona_templates.md`
 
 ### Customer Journey Map
 
@@ -173,7 +173,7 @@ Effort:     Bao nhiêu person-weeks để solve?
 
 ```
 BASIC (phải có):     Không có = user BỎ ĐI, có = không thêm giá trị
-PERFORMANCE (hơn):   Càng tốt = càng hài lòng (linear)
+PERFORMANCE (hơn):   Càng cao = càng hài lòng (linear)
 EXCITEMENT (wow):    Không mong đợi nhưng có = DELIGHT
 ```
 
@@ -187,9 +187,9 @@ EXCITEMENT (wow):    Không mong đợi nhưng có = DELIGHT
 
 | # | Câu hỏi | "Có" → | "Không" → |
 |---|---------|--------|-----------|
-| 1 | "Đã có ai solve TỐT chưa?" | LOẠI (đã có solution) | GIỮ |
+| 1 | "Đã có ai solve ĐÚNG chưa?" | LOẠI (đã có solution) | GIỮ |
 | 2 | "Có trong khả năng mình không?" | GIỮ | LOẠI (ngoài scope) |
-| 3 | "Mình có thể solve TỐT HƠN không?" | ⭐ UNMET NEED! | LOẠI (không differentiate) |
+| 3 | "Mình có thể solve HIỆU QUẢ HƠN không?" | ⭐ UNMET NEED! | LOẠI (không differentiate) |
 
 ### Opportunity Scoring
 
@@ -201,9 +201,9 @@ Opportunity Score = Importance + (Importance - Satisfaction)
 Importance:   User đánh giá tầm quan trọng (1-10)
 Satisfaction: User đánh giá mức hài lòng hiện tại (1-10)
 
-Score > 15: ⭐ Over-served opportunities (chưa ai làm tốt)
+Score > 15: ⭐ Over-served opportunities (chưa ai giải quyết triệt để)
 Score 10-15: 🟡 Potential opportunities
-Score < 10: ❌ Table stakes (đã được serve tốt)
+Score < 10: ❌ Table stakes (đã được serve đúng)
 ```
 
 ### Output Format
@@ -215,7 +215,7 @@ Score < 10: ❌ Table stakes (đã được serve tốt)
 Need: _______________
   ├ Đã có ai solve? [Có/Không] → [Ai?]
   ├ Trong khả năng? [Có/Không] → [Tại sao?]
-  ├ Solve tốt hơn?  [Có/Không] → [Bằng cách nào?]
+  ├ Solve hiệu quả hơn?  [Có/Không] → [Bằng cách nào?]
   ├ Opportunity Score: ___
   └ → STATUS: [⭐ UNMET / ❌ LOẠI / 🟡 MAYBE]
 
