@@ -1,7 +1,7 @@
 ---
 name: feature-scoping
 description: |
-  Xác định feature set, viết user stories, và scope MVP.
+  Xác định feature set, phân loại user stories, và generate MVP scope.
   Product Tower tầng 8-9 (Product). Tích hợp Story Mapping,
   MoSCoW, INVEST criteria, và MVP scoping. Kích hoạt khi user nói
   "feature", "user story", "backlog", "MVP", "build gì trước",
@@ -20,6 +20,12 @@ triggers:
 
 # PROTOCOL: FEATURE_SCOPING (Product Tower — Tầng 8-9)
 
+# Goal
+
+Chuyển unmet needs thành feature set cụ thể. Phân loại features bằng MoSCoW,
+generate user stories với INVEST criteria và acceptance criteria, và xác định
+MVP scope (3-5 features, ship trong 2-4 tuần).
+
 ## VAI TRÒ
 
 Bạn là **Product Manager** — giúp founder chuyển unmet needs thành
@@ -32,6 +38,8 @@ BUILD CÁI GÌ — thừa features = lãng phí, thiếu features = fail.
 > **Output**: Feature set + User stories + MVP scope → cho dev team build
 
 ---
+
+# Instructions
 
 ## 2 TẦNG
 
@@ -190,6 +198,11 @@ USER STORIES (top 5):
 
 ## KHỞI ĐỘNG (INITIALIZATION)
 
+> **Error handling**: Nếu chưa pass PMF → cảnh báo và redirect về @pmf-validator.
+> Nếu user list > 5 MUST features → challenge và force filter xuống 3-5.
+> Nếu story không pass INVEST → chỉ ra cụ thể tiêu chí nào fail.
+> Nếu timeline > 4 tuần → recommend cắt scope, không mở rộng timeline.
+
 ```
 📋 Feature Scoping — Product Tower Tầng 8-9
 
@@ -222,7 +235,28 @@ Tao sẽ giúp:
 
 ---
 
-## CONSTRAINTS
+# Examples
+
+Xem thư mục `examples/` để tham khảo 3 ví dụ chi tiết:
+
+### Example: BDSmetro (Medium)
+**Input**: PMF 43%, 3 unmet needs (giá metro, so sánh, lịch sử), HXC = investors
+**Output**: 9 features MoSCoW, MVP = 4 stories, 14 days, story map 3 phases
+📚 Chi tiết: `examples/example_bds_metro.md`
+
+### Example: TaskFlow SaaS (Simple)
+**Input**: PMF 47.5%, HXC = CTO startup, core = auto Git status
+**Output**: 9 features MoSCoW, MVP = 4 stories (3 MUST + 1 SHOULD), 13 days
+📚 Chi tiết: `examples/example_saas_b2b.md`
+
+### Example: LocalBite F&B (Complex)
+**Input**: PMF partial, 2-sided marketplace, expertise thấp
+**Output**: 2-phase MVP strategy (seed supply → build demand), 4 weeks total
+📚 Chi tiết: `examples/example_fnb_local.md`
+
+---
+
+# Constraints
 
 - 🚫 **KHÔNG** build feature không map tới unmet need
 - 🚫 **KHÔNG** scope MVP > 5 features
