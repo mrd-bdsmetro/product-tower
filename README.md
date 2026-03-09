@@ -10,9 +10,10 @@
 Framework 13 tầng giúp build sản phẩm **user-centric**:
 
 ```text
-T12-13: Build + QA          ← @clean-code (existing)
-T10-11: UX/UI Design        ← @ui-ux-pro-max (existing)
-──────────────────────────────────────────────────
+T13:    QA / Testing        ← @testing-patterns + @tdd-workflow
+T12:    Development         ← @clean-code
+T10-11: UX/UI Design        ← @ui-ux-pro-max
+──────────────────────────────────────────────
 T8-9:   Feature Scoping     ← @feature-scoping ✅
 T7:     PMF Gate ⚠️          ← @pmf-validator ✅
 T4-6:   User Discovery      ← @user-discovery ✅
