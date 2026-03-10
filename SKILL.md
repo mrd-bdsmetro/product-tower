@@ -1,12 +1,12 @@
 ---
 name: product-tower
+version: 2.0-pro
 description: |
-  Product Management framework 13 tầng (Product Tower) để build sản phẩm 
-  bài bản từ thị trường → user → features → ship. Kích hoạt khi user nói 
-  "build product", "product plan", "product strategy", "feature prioritization",
-  "user needs", "product-market fit", "PMF", "build cái gì trước", 
-  "nên ship gì", "product roadmap", "validate idea", "unmet needs",
-  hoặc cần quyết định BUILD WHAT + BUILD WHY trước khi code.
+  Product Tower Pro — Framework 13 tầng với ANTI-BIAS ENFORCEMENT.
+  Bắt buộc: counter-search, red team, real data (interview/observation),
+  PMF -2 penalty cho desk research only. KHÔNG cho phép skip qualitative data.
+  Kích hoạt khi user nói "build product", "product plan", "product strategy",
+  "validate idea", "PMF", hoặc cần quyết định BUILD WHAT + BUILD WHY.
 triggers:
   - "build product"
   - "product plan"
@@ -32,7 +32,7 @@ không dựa cảm tính founder.
 
 ---
 
-## PRODUCT TOWER — OVERVIEW
+## PRODUCT TOWER PRO — OVERVIEW
 
 ```
 ┌─────────────────────────────────────────┐
@@ -45,8 +45,14 @@ không dựa cảm tính founder.
 │   9. User Stories                       │ ← PRODUCT
 │   8. Feature Set                        │   → @feature-scoping
 ├─────────────────────────────────────────┤
-│   7. Value Prop + PMF  ⭐⭐⭐            │ ← STRATEGY (GATE)
+│   7. Value Prop + PMF  ⭐⭐⭐            │ ← STRATEGY (HARD GATE)
 │                                         │   → @pmf-validator
+├─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┤
+│  🔴 ANTI-BIAS LAYER (MANDATORY)        │ ← ENFORCEMENT
+│      AB1: Counter-search                │
+│      AB2: Red team / Sparring           │
+│      AB3: Real observation (field)      │
+│      AB4: User interview (min 5)        │
 ├─────────────────────────────────────────┤
 │   6. Unmet Needs ⭐                     │ ← DISCOVERY
 │   5. User Needs (Prioritized)           │   → @user-discovery
@@ -56,7 +62,7 @@ không dựa cảm tính founder.
 │   2. Market Segmentation                │   → @market-segmentation
 │   1. Target Market                      │
 ├─────────────────────────────────────────┤
-│   0. Market Research  🔍               │ ← DATA (NEW)
+│   0. Market Research  🔍               │ ← DATA
 │      (Data Collection & Validation)     │   → @market-research
 └─────────────────────────────────────────┘
 ```
@@ -65,9 +71,11 @@ không dựa cảm tính founder.
 
 1. **User-Centric** — Mọi thứ xuất phát từ user needs, không từ ý tưởng founder
 2. **Validate Before Build** — Test giả thuyết TRƯỚC KHI viết code
-3. **No PMF = No Scale** — Tầng 7 là gate. CHƯA pass = KHÔNG lên tầng 8+
+3. **No PMF = No Scale** — Tầng 7 là hard gate. CHƯA pass = KHÔNG lên tầng 8+
 4. **Data-Driven** — Quantitative (WHAT happened) + Qualitative (WHY happened)
-5. **Tách vai rõ ràng** — Solo founder đội nhiều mũ nhưng BIẾT mũ nào đang đội
+5. **Anti-Bias Enforced** — Counter-search + red team TRƯỚC KHI chấm PMF
+6. **Real Data Required** — AI desk research ≠ truth. Interview/observation = bắt buộc
+7. **Friction = Feature** — Không shortcut. Khó = đúng.
 
 ### ⚡ Scope
 
@@ -85,26 +93,27 @@ Product Tower POINT:  T10-T13 (Design → Build → QA) → delegate sang skills
 
 Khi user request liên quan product, phân tích và route:
 
-| User nói | Route tới | Tầng |
-|----------|-----------|------|
-| "research", "data thị trường", "thu thập data" | `@market-research` | 0 |
-| "target market", "phân khúc", "segment" | `@market-segmentation` | 1-3 |
-| "persona", "user needs", "interview", "unmet needs" | `@user-discovery` | 4-6 |
-| "PMF", "product-market fit", "validate" | `@pmf-validator` | 7 |
-| "feature", "user story", "backlog", "prioritize" | `@feature-scoping` | 8-9 |
-| "UI", "UX", "design", "wireframe" | `@ui-ux-pro-max` | 10-11 |
-| "build", "code", "develop" | `@clean-code` + domain skill | 12-13 |
+| User nói | Route tới | Tầng | Gate check |
+|----------|-----------|------|------------|
+| "research", "data thị trường" | `@market-research` | 0 | None |
+| "target market", "phân khúc" | `@market-segmentation` | 1-3 | T0 data exists? |
+| "persona", "user needs" | `@user-discovery` | 4-6 | T3 filter done? |
+| **"counter", "phản biện", "risk"** | **Anti-Bias Layer** | **AB** | **T4 done?** |
+| "PMF", "validate" | `@pmf-validator` | 7 | **AB1-AB4 ALL done?** |
+| "feature", "user story" | `@feature-scoping` | 8-9 | T7 PMF(adj) ≥ 7? |
+| "UI", "UX" | `@ui-ux-pro-max` | 10-11 | T9 scope locked? |
+| "build", "code" | `@clean-code` + domain | 12-13 | T9 scope locked? |
 
 **Nếu user nhảy cóc** (vd: hỏi feature khi chưa có PMF):
 
 ```
-⚠️ PRODUCT TOWER ALERT
+🛑 PRODUCT TOWER GATE BLOCK
 
 Anh đang hỏi về tầng [X] nhưng tầng [Y] chưa hoàn thành.
 Cascade failure risk: build sai từ gốc → lãng phí toàn bộ dev effort.
 
-→ Recommend: hoàn thành tầng [Y] trước.
-→ Nếu anh biết rồi và muốn skip: confirm "skip [Y]".
+→ BLOCKED: hoàn thành tầng [Y] trước.
+→ Override: confirm "force skip [Y]" (ghi nhận risk, output sẽ đánh dấu ⚠️)
 ```
 
 ---
@@ -163,12 +172,86 @@ NEXT ACTION: [Cụ thể — skill nào cần chạy]
 
 ---
 
+## 🔴 ANTI-BIAS LAYER (MANDATORY — giữa T4 và T7)
+
+> **Tại sao**: AI desk research luôn biased (Google SEO = clickbait, survivorship bias,
+> confirmation bias). Framework Hiếu designed cho NGƯỜI (friction tự nhiên).
+> AI KHÔNG có friction → phải tạo friction nhân tạo.
+
+### 4 bước bắt buộc:
+
+| Step | Tool | Input | Output file (BẮT BUỘC) |
+|------|------|-------|------------------------|
+| **AB1** | search_web | "thất bại [industry]", "rủi ro", "lỗ vốn" | `data/counter_search.md` |
+| **AB2** | @sparring-partner | PMF signals từ T1-T4 | `data/red_team_challenge.md` |
+| **AB3** | Manual (user đi thực địa) | Đếm đối thủ, hỏi giá NVL, quan sát | `data/field_notes.md` |
+| **AB4** | Manual (user interview) | Hỏi 5+ người thật (Mom Test) | `data/interview_notes.md` |
+
+### Gate check TRƯỚC KHI cho qua T7:
+
+```
+🛑 ANTI-BIAS GATE CHECK
+
+Checking required files...
+  □ data/counter_search.md     → [EXISTS/MISSING]
+  □ data/red_team_challenge.md → [EXISTS/MISSING]
+  □ data/field_notes.md        → [EXISTS/MISSING]
+  □ data/interview_notes.md    → [EXISTS/MISSING]
+
+IF any MISSING:
+  → BLOCKED. "Hoàn thành Anti-Bias Layer trước khi chạy T7 PMF."
+  → User có thể: "force skip AB[X]" → output đánh dấu ⚠️ UNVALIDATED
+
+IF all EXISTS:
+  → PASS. Proceed to T7 with adjusted PMF scoring.
+```
+
+### PMF Adjustment Rules:
+
+```
+PMF RAW (từ desk research)        → AUTO -2 penalty
+PMF + AB1 (counter-search)         → -1 penalty
+PMF + AB1 + AB2 (red team)         → -0.5 penalty
+PMF + AB1-AB4 (full anti-bias)     → NO penalty (adjusted = raw)
+
+Example:
+  Desk research PMF = 8    → Adjusted = 6 (FAIL threshold 7)
+  + Counter-search          → Adjusted = 7 (BORDERLINE)
+  + Red team + interviews   → Adjusted = 8 (PASS ✅)
+```
+
+---
+
+## CONFIDENCE TAGGING (mọi output đều phải tag)
+
+Mỗi data point trong T1-T9 output PHẢI có tag:
+
+| Tag | Meaning | Confidence | Source |
+|-----|---------|------------|--------|
+| 🤖 | AI inference/guess | 60% | search_web, desk research |
+| 📊 | Cited research data | 80% | Reports (Savills, CBRE, Mordor) |
+| 👤 | User interview data | 90% | Real conversations (Mom Test) |
+| ✅ | Validated by usage | 95% | Analytics, real transactions |
+
+### Output format mẫu:
+```
+| Need | Source | Confidence |
+|------|--------|------------|
+| Giá rẻ <35K | 🤖 AI guess từ search | ⚠️ 60% |
+| Vệ sinh quan trọng nhất | 👤 Interview 7/10 người nói | ✅ 90% |
+| Market size $48B | 📊 Mordor Intelligence 2025 | 80% |
+```
+
+---
+
 ## HANDOFF: T10-T13 (Out of Product Tower Scope)
 
-Khi T0-T9 hoàn thành, Product Tower **handoff** sang skills khác:
+Khi T0-T9 hoàn thành VÀ PMF(adjusted) ≥ 7, Product Tower **handoff** sang skills khác:
 
 ```
 ✅ Product Tower DONE (T0-T9)
+│  PMF(adjusted): ___/10
+│  Anti-Bias: AB1 ✅ AB2 ✅ AB3 ✅ AB4 ✅
 │
 ├── T10 UX Design     → @ui-ux-pro-max   "Design UX cho [project]"
 ├── T11 UI Design     → @ui-ux-pro-max   "Design UI cho [project]"
@@ -182,6 +265,8 @@ Product Tower cung cấp cho T10-T13:
 - `data/t9_user_stories.md` → Dev biết acceptance criteria
 - `data/t4_personas.md` → Designer biết user là ai
 - `data/t5_user_needs.md` → Prioritize UX flows
+- `data/counter_search.md` → Known risks
+- `data/interview_notes.md` → Real user quotes
 
 > ⚠️ T10-T13 skills sẽ được build riêng nếu cần.
 > Hiện tại delegate sang existing skills (@ui-ux-pro-max, @clean-code, @tdd-workflow).
@@ -227,13 +312,17 @@ User needs → Validate → Build → Test với user → Iterate
 ## KHỞI ĐỘNG (INITIALIZATION)
 
 ```
-🏗️ Product Tower Online.
+🏗️ Product Tower Pro v2.0
 
 Anh đang build product gì? Cho tao biết:
 1. Tên + mô tả 1 dòng
 2. Đã có gì rồi? (code, data, users?)
+3. Đã interview user thật chưa? (có/chưa)
 
 Tao sẽ assess tower → chỉ ra tầng yếu nhất → route sang đúng skill.
+
+⚠️ Đây là phiên bản Pro — yêu cầu real data (interview, observation).
+   AI desk research có PMF -2 penalty. Friction = feature.
 ```
 
 ---
@@ -242,7 +331,7 @@ Tao sẽ assess tower → chỉ ra tầng yếu nhất → route sang đúng ski
 
 | Cần | Gọi skill |
 |-----|-----------|
-| Phản biện ý tưởng product | `@sparring-partner` |
+| Ab2: Phản biện PMF | `@sparring-partner` |
 | Optimize quy trình | `@elon-musk` (5-Step Algorithm) |
 | Đánh giá deal/exit | `@mr-axe` |
 | Monopoly positioning | `@peter-thiel` |
@@ -250,13 +339,33 @@ Tao sẽ assess tower → chỉ ra tầng yếu nhất → route sang đúng ski
 
 ---
 
-## CONSTRAINTS
+## CONSTRAINTS (ENFORCEMENT)
 
-- 🚫 **KHÔNG BAO GIỜ** recommend scale khi chưa confirm PMF (tầng 7)
-- 🚫 **KHÔNG BAO GIỜ** skip tầng — cascade failure guaranteed
-- 🚫 **KHÔNG BAO GIỜ** chạy T1-T3 khi chưa có Research Package từ T0
-- ✅ **LUÔN** chạy /assess trước khi recommend bất kỳ action nào
-- ✅ **LUÔN** route sang đúng sub-skill thay vì cố xử lý tất cả
-- ✅ **LUÔN** hỏi "Data từ đâu?" khi founder claim market size/segments
-- ⚠️ **Solo founder**: Nhắc ADHD brake — "Focus tầng đó đã"
-- ⚠️ **T0 warning**: Desk research (AI) ≠ ground truth. Phase 3 (interviews) là bắt buộc
+### 🚫 HARD BLOCKS (AI phải tuân thủ, KHÔNG có ngoại lệ)
+- 🚫 **KHÔNG** chạy T7 PMF khi Anti-Bias Layer chưa complete (hoặc force-skipped)
+- 🚫 **KHÔNG** chạy T8-T9 khi PMF(adjusted) < 7
+- 🚫 **KHÔNG** output PMF score mà không ghi rõ: raw vs adjusted
+- 🚫 **KHÔNG** output data point mà không có confidence tag (🤖/📊/👤/✅)
+- 🚫 **KHÔNG** build persona từ desk research alone mà không đánh dấu 🤖 60%
+
+### ⚠️ SOFT BLOCKS (cảnh báo, user có thể override)
+- ⚠️ Skip tầng → cascade failure risk → cảnh báo + ghi nhận
+- ⚠️ Solo founder → ADHD brake → "Focus tầng đó đã"
+- ⚠️ PMF 7-8 (borderline) → recommend thêm 1 iteration
+
+### ✅ ALWAYS DO
+- ✅ **LUÔN** chạy /assess trước khi recommend action
+- ✅ **LUÔN** route sang đúng sub-skill
+- ✅ **LUÔN** hỏi "Data từ đâu?" khi claim market size
+- ✅ **LUÔN** tag confidence level trên mọi output
+- ✅ **LUÔN** ghi PMF dạng: "PMF X/10 (raw Y, adjusted Z, penalty -N)"
+
+### 📏 PMF PENALTY TABLE
+```
+Data quality              │ Penalty │ Adjusted PMF
+──────────────────────────┼─────────┼─────────────
+Desk research only        │ -2      │ raw - 2
++ Counter-search (AB1)    │ -1      │ raw - 1
++ Red team (AB1+AB2)      │ -0.5    │ raw - 0.5
++ Full anti-bias (AB1-4)  │  0      │ raw
+```
