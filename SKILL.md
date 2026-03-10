@@ -1,6 +1,6 @@
 ---
 name: product-tower
-version: 2.0-pro
+version: 2.1-pro
 description: |
   Product Tower Pro — Framework 13 tầng với ANTI-BIAS ENFORCEMENT.
   Bắt buộc: counter-search, red team, real data (interview/observation),
@@ -89,6 +89,110 @@ Product Tower POINT:  T10-T13 (Design → Build → QA) → delegate sang skills
 
 ---
 
+## 🔄 3-LOOP PROTOCOL (Mandatory Data Iteration)
+
+> **Nguyên tắc**: Thu thập data ít nhất 3 lần trước khi sản phẩm ra đời.
+> Mỗi loop nâng confidence, giảm PMF penalty.
+> KHÔNG cho phép chạy T7 PMF khi chưa qua Loop 2+.
+
+### Overview
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  LOOP 1 🤖 — AI Desk Research          (~2 giờ)        │
+│  Express mode → T0-T6 baseline                          │
+│  Confidence: 60% | PMF penalty: -2                      │
+│  Output: hypothesis, segments, AI personas               │
+├──────────────────────────────────────────────────────────┤
+│  LOOP 2 📊 — Counter-Research + Red Team (~1-2 ngày)    │
+│  AB1 counter-search + AB2 sparring                      │
+│  Re-run T0 Pro → update T1-T6                           │
+│  Confidence: 80% | PMF penalty: -0.5                    │
+│  Output: killed bad assumptions, refined segments        │
+├──────────────────────────────────────────────────────────┤
+│  LOOP 3 👤 — Real Human Data           (~1-2 tuần)      │
+│  AB3 field observation + AB4 interviews (5+)            │
+│  Re-run T4-T7 với real data → PMF final                 │
+│  Confidence: 90%+ | PMF penalty: 0                      │
+│  Output: validated personas, real needs, PMF pass/fail   │
+└──────────────────────────────────────────────────────────┘
+```
+
+### Loop Gate Rules
+
+| Gate | Rule | Override |
+|------|------|---------|
+| Loop 1 → 2 | Loop 1 complete (T0-T6 baseline exists) | Auto |
+| Loop 2 → 3 | AB1 + AB2 done (`counter_search.md` + `red_team_challenge.md`) | Force skip → ⚠️ |
+| Loop 3 → T7 | AB3 + AB4 done (`field_notes.md` + `interview_notes.md`) | Force skip → ⚠️ |
+| T7 → T8 | PMF(adjusted) ≥ 7 after Loop 3 | **NO override** |
+
+### File Structure per Loop
+
+```
+[project]/data/
+├── loop1/              ← AI baseline
+│   ├── t1_target_market.md
+│   ├── t2_segments.md
+│   ├── t3_filter.md
+│   ├── t4_personas.md
+│   ├── t5_user_needs.md
+│   └── t6_unmet_needs.md
+├── loop2/              ← Counter-research
+│   ├── counter_search.md       (AB1)
+│   ├── red_team_challenge.md   (AB2)
+│   ├── t1_target_market.md     (updated)
+│   ├── t4_personas.md          (refined)
+│   └── delta_report.md         (what changed vs loop1)
+├── loop3/              ← Real human data
+│   ├── field_notes.md          (AB3)
+│   ├── interview_notes.md      (AB4)
+│   ├── t4_personas.md          (validated)
+│   ├── t5_user_needs.md        (validated)
+│   ├── t6_unmet_needs.md       (validated)
+│   └── delta_report.md         (what changed vs loop2)
+└── t7_pmf.md           ← PMF final (only after Loop 3)
+    t8_features.md
+    t9_user_stories.md
+```
+
+### Delta Report (loop2/ và loop3/)
+
+Mỗi loop 2+ phải có `delta_report.md`:
+
+```
+📊 DELTA REPORT — Loop [N] vs Loop [N-1]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KILLED (giả định sai):
+  - [hypothesis bị bác bỏ]
+
+CONFIRMED (vẫn đúng):
+  - [hypothesis được xác nhận]
+
+NEW (phát hiện mới):
+  - [insight mới từ loop này]
+
+PMF IMPACT:
+  - Before: raw [X], adjusted [Y]
+  - After:  raw [X'], adjusted [Y']
+  - Change: [+/-]
+```
+
+### PMF Penalty by Loop
+
+```
+Loop completed │ Penalty │ Adjusted PMF │ Allowed actions
+──────────────┼─────────┼──────────────┼─────────────────
+Loop 1 only    │ -2      │ raw - 2      │ T0-T6 only
+Loop 2 done    │ -0.5    │ raw - 0.5    │ T0-T6 + review
+Loop 3 done    │  0      │ raw          │ T0-T9 (full)
+```
+
+> ✅ **LUÔN** ghi PMF dạng: `PMF X/10 (raw Y, adjusted Z, loop N, penalty -P)`
+
+---
+
 ## NGUYÊN TẮC ROUTING
 
 Khi user request liên quan product, phân tích và route:
@@ -99,7 +203,7 @@ Khi user request liên quan product, phân tích và route:
 | "target market", "phân khúc" | `@market-segmentation` | 1-3 | T0 data exists? |
 | "persona", "user needs" | `@user-discovery` | 4-6 | T3 filter done? |
 | **"counter", "phản biện", "risk"** | **Anti-Bias Layer** | **AB** | **T4 done?** |
-| "PMF", "validate" | `@pmf-validator` | 7 | **AB1-AB4 ALL done?** |
+| "PMF", "validate" | `@pmf-validator` | 7 | **Loop 3 complete? AB1-AB4 ALL done?** |
 | "feature", "user story" | `@feature-scoping` | 8-9 | T7 PMF(adj) ≥ 7? |
 | "UI", "UX" | `@ui-ux-pro-max` | 10-11 | T9 scope locked? |
 | "build", "code" | `@clean-code` + domain | 12-13 | T9 scope locked? |
@@ -312,17 +416,19 @@ User needs → Validate → Build → Test với user → Iterate
 ## KHỞI ĐỘNG (INITIALIZATION)
 
 ```
-🏗️ Product Tower Pro v2.0
+🏗️ Product Tower Pro v2.1
 
 Anh đang build product gì? Cho tao biết:
 1. Tên + mô tả 1 dòng
 2. Đã có gì rồi? (code, data, users?)
 3. Đã interview user thật chưa? (có/chưa)
+4. Đang ở loop mấy? (1: AI research / 2: counter-research / 3: real data)
 
-Tao sẽ assess tower → chỉ ra tầng yếu nhất → route sang đúng skill.
+Tao sẽ assess tower → check loop status → route sang đúng skill.
 
-⚠️ Đây là phiên bản Pro — yêu cầu real data (interview, observation).
-   AI desk research có PMF -2 penalty. Friction = feature.
+⚠️ Đây là phiên bản Pro — bắt buộc 3 loops data collection.
+   Loop 1 = AI → Loop 2 = phản biện → Loop 3 = interview thật.
+   PMF chỉ chấm chính thức ở Loop 3.
 ```
 
 ---
@@ -344,8 +450,9 @@ Tao sẽ assess tower → chỉ ra tầng yếu nhất → route sang đúng ski
 ### 🚫 HARD BLOCKS (AI phải tuân thủ, KHÔNG có ngoại lệ)
 - 🚫 **KHÔNG** chạy T7 PMF khi Anti-Bias Layer chưa complete (hoặc force-skipped)
 - 🚫 **KHÔNG** chạy T8-T9 khi PMF(adjusted) < 7
-- 🚫 **KHÔNG** output PMF score mà không ghi rõ: raw vs adjusted
+- 🚫 **KHÔNG** output PMF score mà không ghi rõ: raw vs adjusted vs loop number
 - 🚫 **KHÔNG** output data point mà không có confidence tag (🤖/📊/👤/✅)
+- 🚫 **KHÔNG** chạy T7 PMF chính thức khi chưa qua Loop 2+ (ít nhất AB1+AB2)
 - 🚫 **KHÔNG** build persona từ desk research alone mà không đánh dấu 🤖 60%
 
 ### ⚠️ SOFT BLOCKS (cảnh báo, user có thể override)
@@ -358,14 +465,5 @@ Tao sẽ assess tower → chỉ ra tầng yếu nhất → route sang đúng ski
 - ✅ **LUÔN** route sang đúng sub-skill
 - ✅ **LUÔN** hỏi "Data từ đâu?" khi claim market size
 - ✅ **LUÔN** tag confidence level trên mọi output
-- ✅ **LUÔN** ghi PMF dạng: "PMF X/10 (raw Y, adjusted Z, penalty -N)"
-
-### 📏 PMF PENALTY TABLE
-```
-Data quality              │ Penalty │ Adjusted PMF
-──────────────────────────┼─────────┼─────────────
-Desk research only        │ -2      │ raw - 2
-+ Counter-search (AB1)    │ -1      │ raw - 1
-+ Red team (AB1+AB2)      │ -0.5    │ raw - 0.5
-+ Full anti-bias (AB1-4)  │  0      │ raw
-```
+- ✅ **LUÔN** ghi PMF dạng: `PMF X/10 (raw Y, adjusted Z, loop N, penalty -P)`
+- ✅ **LUÔN** tạo `delta_report.md` khi chạy Loop 2+ (so sánh thay đổi)
