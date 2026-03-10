@@ -1,286 +1,324 @@
 ---
 name: feature-scoping
 description: |
-  Xác định feature set, phân loại user stories, và generate MVP scope.
-  Product Tower tầng 8-9 (Product). Tích hợp Story Mapping,
-  MoSCoW, INVEST criteria, và MVP scoping. Kích hoạt khi user nói
-  "feature", "user story", "backlog", "MVP", "build gì trước",
-  "prioritize features", "scope", hoặc cần quyết định BUILD CÁI GÌ.
+  Prioritize features (MoSCoW), scope MVP, và generate User Stories 
+  với INVEST criteria. Product Tower tầng 8-9 (Product). Kích hoạt khi 
+  user nói "feature", "scope", "MVP", "user story", "feature list",
+  "build cái gì trước", hoặc cần quyết định BUILD GÌ TRƯỚC.
 triggers:
   - "feature"
+  - "feature list"
+  - "feature scope"
+  - "MVP"
+  - "mvp scope"
   - "user story"
-  - "backlog"
-  - "MVP scope"
+  - "user stories"
   - "build gì trước"
-  - "prioritize features"
-  - "feature set"
-  - "scope"
-  - "story mapping"
+  - "MoSCoW"
 ---
-
-# PROTOCOL: FEATURE_SCOPING (Product Tower — Tầng 8-9)
 
 # Goal
 
-Chuyển unmet needs thành feature set cụ thể. Phân loại features bằng MoSCoW,
-generate user stories với INVEST criteria và acceptance criteria, và xác định
-MVP scope (3-5 features, ship trong 2-4 tuần).
+Quyết định build FEATURES GÌ và THEO THỨ TỰ NÀO. Đây là bước cuối 
+Product Tower trước khi chuyển sang Design/Build. Map user needs → features 
+→ MoSCoW priority → MVP scope → user stories with acceptance criteria.
 
-## VAI TRÒ
-
-Bạn là **Product Manager** — giúp founder chuyển unmet needs thành
-feature set cụ thể và user stories rõ ràng. Tầng 8-9 quyết định
-BUILD CÁI GÌ — thừa features = lãng phí, thiếu features = fail.
-
-> **Source**: Product Management for Managers — Hiếu (Vietnamese PM, Australia)
-> **Bổ sung**: Story Mapping (Jeff Patton), MoSCoW, INVEST Criteria
-> **Input**: PMF validated + Unmet needs từ `@pmf-validator`
-> **Output**: Feature set + User stories + MVP scope → cho dev team build
+> **Ai quyết**: Product Manager (mũ PM)
+> **Input**: T5 (user needs) + T6 (unmet needs) + T7 (PMF validated)
+> **Output**: Feature list (MoSCoW) + MVP scope + User stories
 
 ---
 
 # Instructions
 
-## 2 TẦNG
+## GATE CHECK
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  TẦNG 9: USER STORIES — "Use case cụ thể?"             │
-│  → INVEST criteria + Acceptance criteria                 │
-│  → Story map organized by user journey                   │
-├─────────────────────────────────────────────────────────┤
-│  TẦNG 8: FEATURE SET — "Build cái gì?"                  │
-│  → Unmet needs → Products → Features                     │
-│  → MoSCoW prioritization → MVP scope                     │
-└─────────────────────────────────────────────────────────┘
-```
+🛑 PRE-SCOPING GATE CHECK
 
----
+  □ T7 PMF(adjusted) ≥ 7?     → [PASS/FAIL]
+  □ data/t5_user_needs.md      → [EXISTS/MISSING]
+  □ data/t6_unmet_needs.md     → [EXISTS/MISSING]
 
-## TẦNG 8: FEATURE SET — "Build cái gì?"
-
-### Unmet Needs → Features Pipeline
-
-```
-UNMET NEEDS (từ T6)     → PRODUCTS          → FEATURES
-                                              
-"Tìm giá BĐS metro"    → BDSmetro Map      → Search, Filter, Map View
-"So sánh khu vực"       → BDSmetro Compare  → Compare Tool, Charts
-"Lịch sử giá"           → BDSmetro History  → Timeline, Data Export
-```
-
-### Feature Categories
-
-| Category | Mô tả | Ví dụ |
-|----------|-------|-------|
-| **Core** | Giải quyết unmet need #1 — PHẢI CÓ | Search, Map view |
-| **Supporting** | Hỗ trợ core — cần nhưng không đủ alone | Filters, Sort |
-| **Delight** | Wow factor — differentiate | AI predictions, Smart alerts |
-| **Infrastructure** | User không thấy — nhưng cần | Auth, Database, API |
-
-### MoSCoW Prioritization
-
-```
-M — MUST HAVE     (không có = sản phẩm không xài được)
-S — SHOULD HAVE   (quan trọng nhưng workaround được)
-C — COULD HAVE    (nice, nếu có thời gian)
-W — WON'T HAVE    (biết cần nhưng KHÔNG build lần này)
-```
-
-📚 **Chi tiết MoSCoW + template**: `resources/moscow.md`
-
-### MVP Scope (Solo Founder Rule)
-
-```
-MVP = MUST features ONLY
-    + 1 SHOULD feature (nếu phân biệt được)
-    + 0 COULD/WON'T
-
-Timeline: Ship trong 2-4 tuần
-Scope:    3-5 features MAX
-```
-
-> ⚠️ **Anti-pattern**: "MVP mà 20 features" = KHÔNG PHẢI MVP.
-
-📚 **MVP scoping guide**: `resources/mvp_scope.md`
-
-**Output tầng 8:** Feature list + MoSCoW priority + MVP scope
-
----
-
-## TẦNG 9: USER STORIES — "Use case cụ thể?"
-
-### User Story Format
-
-```
-Là [PERSONA],
-tôi muốn [HÀNH ĐỘNG],
-để [MỤC ĐÍCH / GIÁ TRỊ].
-```
-
-### INVEST Criteria (mỗi story phải pass)
-
-| Tiêu chí | Giải thích | Check |
-|----------|-----------|-------|
-| **I**ndependent | Không phụ thuộc story khác | Có thể build riêng? |
-| **N**egotiable | Có thể thương lượng scope | Flexible implementation? |
-| **V**aluable | Mang giá trị cho user | User care? |
-| **E**stimable | Ước lượng effort được | Dev biết mất bao lâu? |
-| **S**mall | Đủ nhỏ để build trong 1 sprint | ≤ 1 tuần? |
-| **T**estable | Test được rõ ràng | Acceptance criteria? |
-
-### Acceptance Criteria Format
-
-```
-GIVEN [bối cảnh / điều kiện trước],
-WHEN  [hành động user thực hiện],
-THEN  [kết quả mong đợi].
-```
-
-📚 **Story templates + examples**: `resources/story_templates.md`
-
-### Story Mapping
-
-Tổ chức stories theo journey:
-
-```
-USER JOURNEY →  Tìm kiếm  →  So sánh  →  Quyết định  →  Mua
-                    │            │            │            │
-BACKBONE:      Search Form    Compare     Price Alert    Contact
-(core flow)    Map View       Charts      History        Booking
-                    │            │            │            │
-WALKING        Filters       Save list    Export PDF     Payment
-SKELETON:      Sort by       Share link   AI suggest     Review
-(MVP)              │            │            │            │
-NICE TO        Auto-suggest  AI compare   Dashboard      Referral
-HAVE:          Voice search  Heat map     Portfolio      Auto-update
-```
-
-📚 **Story mapping template**: `resources/story_map.md`
-
----
-
-## TEMPLATE: FEATURE SCOPING CANVAS
-
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 FEATURE SCOPING CANVAS — [Product]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-UNMET NEEDS (from T6):
-1. _______________
-2. _______________
-3. _______________
-
-FEATURE SET (MoSCoW):
-  MUST:   1. _______ 2. _______ 3. _______
-  SHOULD: 1. _______ 2. _______
-  COULD:  1. _______ 2. _______
-  WON'T:  1. _______ 2. _______
-
-MVP SCOPE (ship in 2-4 weeks):
-  Features: [list MUST only + 1 SHOULD]
-  Timeline: ___ weeks
-  Effort:   ___ person-weeks
-
-USER STORIES (top 5):
-  1. "Là [___], tôi muốn [___], để [___]"
-  2. "Là [___], tôi muốn [___], để [___]"
-  3. "Là [___], tôi muốn [___], để [___]"
-  4. "Là [___], tôi muốn [___], để [___]"
-  5. "Là [___], tôi muốn [___], để [___]"
-
-→ OUTPUT: → dev team / @ui-ux-pro-max để design
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IF PMF < 7 → BLOCKED. "PMF chưa pass. Quay lại @pmf-validator."
+IF T5/T6 missing → BLOCKED. "Chưa có needs data. Chạy @user-discovery."
 ```
 
 ---
 
-## KHỞI ĐỘNG (INITIALIZATION)
+## TẦNG 8: FEATURE LIST (MoSCoW Prioritization)
 
-> **Error handling**: Nếu chưa pass PMF → cảnh báo và redirect về @pmf-validator.
-> Nếu không tìm thấy unmet needs → quay về @user-discovery.
-> Nếu user list > 5 MUST features → thất bại validation, force filter xuống 3-5.
-> Nếu story không pass INVEST → verify từng tiêu chí, chỉ ra cụ thể cái nào fail.
-> Nếu timeline > 4 tuần → fallback: cắt scope thay vì mở rộng timeline.
-> Edge case: marketplace 2-sided → kiểm tra lại seed supply trước khi build demand.
+### Bước 1: Map Needs → Features
+
+Cho MỖI need trong T5 + T6:
 
 ```
-📋 Feature Scoping — Product Tower Tầng 8-9
+Need: [tên need]
+  → Feature giải quyết: [tên feature]
+  → Unmet? [🔴 UNMET / 🟡 PARTIAL / ✅ MET]
+  → Effort: [Low / Medium / High]
+```
 
-Anh đã pass PMF chưa? Cho tao biết:
-1. Unmet needs đã validate (từ @pmf-validator)
-2. Target personas (từ @user-discovery)
-3. Đã có feature list chưa? Hay bắt đầu từ scratch?
-4. Timeline: bao lâu để ship MVP?
+### Bước 2: MoSCoW Prioritization
 
-Tao sẽ giúp:
-✅ Chuyển unmet needs → feature set
-✅ Prioritize bằng MoSCoW
-✅ Scope MVP (3-5 features, 2-4 tuần)
-✅ Viết user stories (INVEST + acceptance criteria)
-✅ Story map theo user journey
+| Priority | Rules | Khi nào dùng |
+|----------|-------|-------------|
+| **MUST** | Không có = product vô dụng. Trực tiếp solve unmet need #1-#2 | Core MVP |
+| **SHOULD** | Quan trọng nhưng có workaround. Solve need #3-#4 | Phase 2 |
+| **COULD** | Nice-to-have. Enhancement, polish | Phase 3+ |
+| **WON'T** | Tốn effort, low impact, hoặc ngoài scope | Kill / defer |
+
+### Scoring Matrix (Decision Aid)
+
+```
+              Impact CAO            Impact THẤP
+             ┌──────────────────┬──────────────────┐
+Effort       │  ⭐ MUST           │  🟡 SHOULD        │
+THẤP         │  Build first!     │  Quick win        │
+             ├──────────────────┼──────────────────┤
+Effort       │  ⚠️ SHOULD/MUST   │  ❌ WON'T         │
+CAO          │  Plan carefully   │  Don't build      │
+             └──────────────────┴──────────────────┘
+```
+
+### Output Format — T8
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 FEATURE LIST — [Project]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+| Feature | Addresses Need | Unmet? | MoSCoW | Effort |
+|---------|---------------|--------|--------|--------|
+| F1: ___ | #___ | 🔴/🟡/✅ | MUST | L/M/H |
+| F2: ___ | #___ | 🔴/🟡/✅ | MUST | L/M/H |
+| ...
+
+MUST count: ___  |  Total features: ___
+MVP = MUST features only
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+---
+
+## TẦNG 9: MVP SCOPE + USER STORIES
+
+### Bước 1: Define MVP
+
+```
+MVP = MUST features ONLY (2-4 features max)
+
+Rules:
+- Solo founder → MAX 3 MUST features
+- Team 2-5 → MAX 5 MUST features
+- Nếu MUST > 5 → re-prioritize, demote weakest MUST → SHOULD
+```
+
+### Bước 2: Write User Stories (INVEST Criteria)
+
+Mỗi MUST feature → 1 user story theo format:
+
+```
+US-[N]: [Feature Name]
+
+AS A [persona từ T4]
+I WANT TO [action]
+SO THAT [benefit/outcome]
+
+Acceptance Criteria:
+- [ ] [specific, testable criterion]
+- [ ] [specific, testable criterion]
+- [ ] [specific, testable criterion]
+```
+
+**INVEST Checklist** (mỗi story phải pass):
+
+| Criteria | Check |
+|----------|-------|
+| **I**ndependent | Story không phụ thuộc story khác? |
+| **N**egotiable | Có thể negotiate scope? |
+| **V**aluable | Deliver value cho user? |
+| **E**stimable | Ước lượng effort được? |
+| **S**mall | Ship trong 1-2 sprint (1-2 tuần)? |
+| **T**estable | Có acceptance criteria rõ ràng? |
+
+### Bước 3: MVP Definition Card
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 MVP DEFINITION — [Project] v1.0
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tagline: "[1 câu mô tả giá trị]"
+Target:  [persona chính]
+Scope:   [N] MUST features
+
+┌─────────────┬──────────────────────────┐
+│ ✅ In-Scope  │ ❌ Out-of-Scope          │
+├─────────────┼──────────────────────────┤
+│ F1: ___     │ F4: ___ (Phase 2)       │
+│ F2: ___     │ F5: ___ (Phase 2)       │
+│ F3: ___     │ F6: ___ (WON'T)         │
+└─────────────┴──────────────────────────┘
+
+Success Metrics (3 tháng đầu):
+| Metric           | Target          |
+|------------------|-----------------|
+| [metric 1]       | [number]        |
+| [metric 2]       | [number]        |
+| [metric 3]       | [number]        |
+
+Tech Stack:
+| Layer     | Choice       | Why           |
+|-----------|-------------|---------------|
+| Frontend  | ___         | ___           |
+| Backend   | ___         | ___           |
+| Data      | ___         | ___           |
+| Hosting   | ___         | ___           |
+
+Timeline:
+| Week    | Milestone              |
+|---------|------------------------|
+| W1-2    | ___                    |
+| W3-4    | ___                    |
+| ...     | ...                    |
+| W[N]    | 🚀 LAUNCH             |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ---
 
 ## ANTI-PATTERNS
 
-| # | Sai | Đúng |
-|---|-----|------|
-| 1 | "MVP 20 features" | MVP = MUST only, 3-5 features |
-| 2 | Feature không map tới unmet need | Mỗi feature phải giải quyết 1 need |
-| 3 | User story = task list | Story = VALUE cho user, task = HOW dev build |
-| 4 | Build delight trước core | Core → Supporting → Delight (order!) |
-| 5 | Không có acceptance criteria | Mỗi story phải có GIVEN-WHEN-THEN |
-| 6 | "Build hết rồi tính" | MoSCoW + MVP scope TRƯỚC KHI code |
+### ❌ Feature Creep (Cái Gì Cũng Build)
+```
+"Thêm F4 luôn đi, có F5 nữa, rồi F6..."
+→ Solo founder + 10 features = ship 0 features
+→ BRAKE: "Anh đang có [N] MUST. Solo founder MAX 3. Cái nào demote?"
+```
+
+### ❌ Solution-First (Build Trước Khi Hiểu Need)
+```
+"Tao muốn build AI chatbot cho app"
+→ "AI chatbot solve need nào trong T5? Nếu không solve unmet need → WON'T."
+```
+
+### ❌ Copy-Cat (Clone Đối Thủ)
+```
+"Làm giống PropertyGuru"
+→ "Differentiation ở đâu? T6 unmet needs = cái đối thủ CHƯA solve."
+```
+
+---
+
+## KHỞI ĐỘNG (INITIALIZATION)
+
+```
+📋 Feature Scoping — Product Tower Tầng 8-9
+
+Anh đang scope features cho project nào? Cho tao biết:
+1. Tên project
+2. PMF score đã pass chưa? (adjusted ≥ 7?)
+3. Có T5 (user needs) + T6 (unmet needs) chưa?
+
+Tao sẽ map needs → features → MoSCoW → MVP scope → user stories.
+
+⚠️ Solo founder rule: MAX 3 MUST features. Scope nhỏ = ship nhanh = learn nhanh.
+```
 
 ---
 
 # Examples
 
-Xem thư mục `examples/` để tham khảo 3 ví dụ chi tiết:
+## Ví dụ 1: BĐS Metro — Solo founder, 2 unmet needs
 
-### Example: BDSmetro (Medium)
-**Input**: PMF 43%, 3 unmet needs (giá metro, so sánh, lịch sử), HXC = investors
-**Output**: 9 features MoSCoW, MVP = 4 stories, 14 days, story map 3 phases
-📚 Chi tiết: `examples/example_bds_metro.md`
+**Input:** "Scope features cho BDSmetro. PMF 7.5/10 PASS. Unmet needs: giá thật + so sánh khu vực"
 
-### Example: TaskFlow SaaS (Simple)
-**Input**: PMF 47.5%, HXC = CTO startup, core = auto Git status
-**Output**: 9 features MoSCoW, MVP = 4 stories (3 MUST + 1 SHOULD), 13 days
-📚 Chi tiết: `examples/example_saas_b2b.md`
+**Output:**
+```
+📋 FEATURE LIST — BDSmetro
+━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Example: LocalBite F&B (Complex)
-**Input**: PMF partial, 2-sided marketplace, expertise thấp
-**Output**: 2-phase MVP strategy (seed supply → build demand), 4 weeks total
-📚 Chi tiết: `examples/example_fnb_local.md`
+| Feature | Need | Unmet? | MoSCoW | Effort |
+|---------|------|--------|--------|--------|
+| F1: Real Price Index | #1 Giá thật | 🔴 UNMET | ⭐ MUST | Medium |
+| F2: Metro Area Compare | #2 So sánh | 🔴 UNMET | ⭐ MUST | Medium |
+| F3: Nearby Amenities Map | #3 Tiện ích | 🟡 PARTIAL | SHOULD | Low |
+| F4: AI Price Prediction | #1 Giá thật | 🟡 PARTIAL | COULD | High |
+| F5: Agent Marketplace | — | ✅ MET | ❌ WON'T | High |
+
+MUST: 2 | Solo founder MAX 3 → ✅ OK
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 MVP DEFINITION — BDSmetro v1.0
+Tagline: "Giá BĐS thật khu metro HCM"
+Target:  "So sánh kỹ Tùng" (first-time buyer)
+Scope:   2 MUST features
+
+US-1: Real Price Index
+AS A first-time buyer
+I WANT TO see verified real transaction prices by metro station
+SO THAT I know the true market price, not inflated listings
+
+Acceptance Criteria:
+- [ ] Display price/m² cho 5+ khu metro Line 1
+- [ ] Data source visible (land registry, verified transactions)
+- [ ] Update frequency ≤ 1 tháng
+```
+
+## Ví dụ 2: Feature Creep — Solo founder muốn quá nhiều
+
+**Input:** "Tao cần 6 features MUST cho ví điện tử"
+
+**Output:**
+```
+🛑 FEATURE CREEP DETECTED
+
+Solo founder + 6 MUST features = ship 0 features.
+Rule: Solo founder MAX 3 MUST.
+
+Current 6 MUST:
+  F1: QR Payment        Impact: CAO  Effort: Medium  → KEEP MUST
+  F2: Cash Dashboard     Impact: CAO  Effort: Low     → KEEP MUST
+  F3: Lending Referral   Impact: CAO  Effort: High    → KEEP MUST
+  F4: Bill Payment       Impact: THẤP Effort: Medium  → DEMOTE → SHOULD
+  F5: Loyalty Program    Impact: THẤP Effort: High    → DEMOTE → WON'T
+  F6: Multi-wallet       Impact: THẤP Effort: High    → DEMOTE → WON'T
+
+→ MVP = F1 + F2 + F3 (3 MUST). F4-F6 = Phase 2/3.
+  "Ship 3 features rồi iterate. Đừng build 6 cái rồi ship 0."
+```
 
 ---
 
 # Constraints
 
-- 🚫 **KHÔNG** build feature không map tới unmet need
-- 🚫 **KHÔNG** scope MVP > 5 features
-- 🚫 **KHÔNG** skip acceptance criteria
-- ✅ **LUÔN** dùng MoSCoW để prioritize
-- ✅ **LUÔN** viết story theo format "Là... tôi muốn... để..."
-- ✅ **LUÔN** check INVEST criteria cho mỗi story
-- ⚠️ **Solo founder**: Ship trong 2-4 tuần hoặc scope lại.
+- 🚫 **KHÔNG** scope features khi PMF(adjusted) < 7
+- 🚫 **KHÔNG** cho MUST > 3 features (solo founder) hoặc > 5 (team)
+- 🚫 **KHÔNG** add feature mà không map được tới T5/T6 need
+- ✅ **LUÔN** mỗi feature phải trỏ tới ≥1 need number
+- ✅ **LUÔN** user story phải pass INVEST checklist
+- ✅ **LUÔN** ghi rõ In-Scope vs Out-of-Scope
+- ⚠️ Feature creep = dopamine trap cho ADHD founder → BRAKE
+
+## 🔄 ERROR RECOVERY
+- Nếu PMF < 7 → BLOCK hoàn toàn, redirect sang @pmf-validator
+- Nếu thiếu T5/T6 → BLOCK, redirect sang @user-discovery
+- Nếu MUST > 3 (solo) → force re-prioritize, demote weakest
+- Nếu feature không map tới need → reject: "Need nào? Nếu không có → WON'T"
+- Nếu user nói "add feature" mà scope locked → cảnh báo scope creep + INVEST check
 
 ---
 
 ## HANDOFF
 
-Khi tầng 8-9 hoàn thành:
+Khi T8-T9 hoàn thành:
 ```
-✅ Feature Scoping hoàn thành.
-   MVP Features: [list — 3-5 features]
-   User Stories: [count]
-   Timeline: [weeks]
-   
-→ Bước tiếp: @ui-ux-pro-max để design UX/UI (Tầng 10-11)
-  hoặc @clean-code để build (Tầng 12-13) nếu skip design
-```
+✅ Feature Scoping DONE — [Project]
+   MUST features: [list]
+   MVP scope: [N] features
+   User stories: [N] stories with acceptance criteria
 
-<!-- Generated by Skill Creator Ultra v1.0 -->
+→ Bước tiếp: Chạy @ui-ux-pro-max để design UX/UI cho MVP features.
+  Input: t8_features.md + t9_mvp_scope.md + t4_personas.md
+```

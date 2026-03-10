@@ -1,12 +1,10 @@
 ---
 name: user-discovery
 description: |
-  Khám phá user: build personas, map user needs, tìm unmet needs,
-  customer journey mapping. Product Tower tầng 4-6 (Discovery). Tích hợp
-  Persona BAG, RICE prioritization, Mom Test, và Opportunity Solution Tree.
-  Kích hoạt khi user nói "persona", "user needs", "interview user",
-  "unmet needs", "khảo sát khách hàng", "user research", "customer journey",
-  "mom test", hoặc cần hiểu USER THẬT SỰ CẦN GÌ trước khi build.
+  Khám phá user: build personas, map user needs, tìm unmet needs. 
+  Product Tower tầng 4-6 (Discovery). Kích hoạt khi user nói "persona", 
+  "user needs", "interview user", "unmet needs", "khảo sát khách hàng",
+  "user research", hoặc cần hiểu USER THẬT SỰ CẦN GÌ trước khi build.
 triggers:
   - "persona"
   - "user persona"
@@ -16,134 +14,77 @@ triggers:
   - "user research"
   - "khảo sát"
   - "khách hàng cần gì"
-  - "customer journey"
-  - "mom test"
-  - "customer discovery"
 ---
-
-# PROTOCOL: USER_DISCOVERY (Product Tower — Tầng 4-6)
 
 # Goal
 
-Trích xuất, phân loại và validate user needs thực tế. Build personas từ data,
-map customer journey, tính RICE score cho top needs, và filter unmet needs
-bằng Opportunity Scoring.
+Giúp founder hiểu user THẬT SỰ cần gì (không phải founder NGHĨ user cần gì). 
+Tầng này quyết định build CÁI GÌ — sai ở đây = build thứ không ai dùng.
 
-## VAI TRÒ
-
-Bạn là **User Researcher** — giúp founder hiểu user THẬT SỰ cần gì (không phải
-founder NGHĨ user cần gì). Tầng này quyết định build CÁI GÌ — sai ở đây =
-build thứ không ai dùng.
-
-> **Source**: Product Management for Managers — Hiếu (Vietnamese PM, Australia)
-> **Bổ sung**: Mom Test (Rob Fitzpatrick), Persona BAG, RICE, Kano Model
+> **Ai quyết**: Product Manager (mũ PM)
 > **Input**: Filtered segments từ `@market-segmentation`
-> **Output**: Unmet needs list + Customer journey → input cho `@pmf-validator`
+> **Output**: Unmet needs list → input cho `@pmf-validator`
 
 ---
 
 # Instructions
 
-## QUICK REFERENCE — 3 TẦNG
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  TẦNG 6: UNMET NEEDS ⭐ — "Cái gì CHƯA AI solve?"     │
-│  → 3 câu hỏi filter + Opportunity scoring              │
-├─────────────────────────────────────────────────────────┤
-│  TẦNG 5: USER NEEDS (PRIORITIZED) — "Họ cần gì?"       │
-│  → Impact × Frequency + RICE scoring + Kano             │
-├─────────────────────────────────────────────────────────┤
-│  TẦNG 4: USER PERSONAS — "Ai là user thật?"             │
-│  → Persona BAG + JTBD + Customer Journey Map            │
-└─────────────────────────────────────────────────────────┘
-```
-
----
-
-## TẦNG 4: USER PERSONAS — "Ai là user thật?"
+## Tầng 4: USER PERSONAS — "Ai là user thật?"
 
 > ⚠️ **Persona ≠ Market Segment!**
 > - Segment: phân theo demographic (tuổi, thu nhập)
 > - Persona: phân theo **HÀNH VI + MỤC ĐÍCH** khi dùng sản phẩm
 
-### Thu thập data (chọn ít nhất 1)
+**Cách build personas:**
 
-| Phương pháp | Effort | Quality | Khi nào dùng |
-|-------------|--------|---------|-------------|
-| Interview 5-10 người | 🟡 Medium | ⭐ Cao nhất | Luôn, nếu có thể |
-| Survey online | 🟢 Low | 🟡 Trung bình | Khi cần số lượng |
-| Phân tích forum/review | 🟢 Low | 🟡 Trung bình | Khi chưa có access user |
-| Contextual inquiry | 🔴 High | ⭐ Rất cao | Khi cần hiểu behavior thật |
-| Analytics data | 🟢 Low | 🟡 Quant only | Khi đã có sản phẩm |
+1. **Thu thập data** (chọn ít nhất 1):
+   - Interview 5-10 người trong target segment
+   - Survey online (Google Forms, Typeform)
+   - Quan sát hành vi thật (contextual inquiry)
+   - Phân tích data có sẵn (analytics, forum, review)
 
-📚 **Interview script chi tiết**: `resources/interview_script_vn.md`
-📚 **Nguyên tắc Mom Test**: `resources/mom_test.md`
+2. **Gom pattern** — tìm nhóm người có cùng:
+   - Mục đích khi dùng sản phẩm (goal)
+   - Hành vi tiêu biểu (behavior)
+   - Pain points chính (frustration)
+   - Kênh tiếp cận (touchpoint)
 
-### Persona Template (BAG Framework)
-
-Cho mỗi persona (2-4 personas):
-
-```
-┌─────────────────────────────────────────────────┐
-│ PERSONA: [Tên đại diện]                        │
-├─────────────────────────────────────────────────┤
-│ Demographic: [tuổi, nghề, thu nhập, vị trí]    │
-│                                                 │
-│ BEHAVIORS (hành vi):                            │
-│   • [Cách họ hiện tại giải quyết vấn đề]       │
-│   • [Tools/services đang dùng]                  │
-│   • [Tần suất gặp vấn đề]                      │
-│                                                 │
-│ ASPIRATIONS (khát vọng):                        │
-│   • [Goal khi dùng sản phẩm]                    │
-│   • [Trạng thái lý tưởng họ muốn đạt]          │
-│                                                 │
-│ GOALS (mục tiêu cụ thể):                        │
-│   • [JTBD: "Khi ___, tôi muốn ___, để ___"]    │
-│   • [Metric thành công cá nhân]                 │
-│                                                 │
-│ PAIN POINTS:                                    │
-│   • [Vấn đề #1 — đau ở đâu?]                │
-│   • [Chi phí hiện tại cho vấn đề này]           │
-│                                                 │
-│ TOUCHPOINTS:                                    │
-│   • [Kênh tiếp cận — ở đâu tìm họ?]            │
-│                                                 │
-│ QUOTE: "[Câu nói đại diện từ interview]"        │
-└─────────────────────────────────────────────────┘
-```
-
-📚 **Persona templates chi tiết**: `resources/persona_templates.md`
-
-### Customer Journey Map
-
-Cho mỗi persona, vẽ journey:
+3. **Đặt tên + mô tả** — 2-4 personas, mỗi persona:
 
 ```
-AWARENESS → CONSIDERATION → DECISION → USE → LOYALTY
-   │              │             │         │        │
-   ├─ Touchpoint  ├─ Touchpoint ├─ Action ├─ Pain  ├─ Feedback
-   ├─ Emotion     ├─ Emotion    ├─ Emotion├─ Point ├─ Emotion
-   └─ Question    └─ Question   └─ Barrier└─ Need  └─ Opportunity
+┌─────────────────────────────────────────┐
+│ PERSONA: [Tên đại diện]                │
+├─────────────────────────────────────────┤
+│ Demographic: [tuổi, nghề, thu nhập]    │
+│ Goal:        [mục đích khi dùng SP]    │
+│ Behavior:    [hành vi tiêu biểu]       │
+│ Pain Point:  [vấn đề lớn nhất]         │
+│ Touchpoint:  [kênh tiếp cận]           │
+│ Quote:       "[câu nói đại diện]"      │
+└─────────────────────────────────────────┘
 ```
 
-📚 **Journey map template**: `resources/journey_map.md`
+> 💡 **Lưu ý**: Có personas NGOÀI target segment nhưng VẪN quan trọng.
+> VD: Thư ký book phòng cho sếp — không phải target nhưng là touchpoint quan trọng.
 
 ---
 
-## TẦNG 5: USER NEEDS (PRIORITIZED) — "Họ cần gì?"
+## Tầng 5: USER NEEDS (PRIORITIZED) — "Họ cần gì?"
 
-### Bước 1: Thu thập TẤT CẢ needs
+**Quy trình:**
 
-Từ interviews + data → liệt kê MỌI need (không lọc, không đánh giá):
+1. **Hỏi đúng câu hỏi** — cho mỗi persona:
+   ```
+   "Khi [situation liên quan thị trường], bạn cần gì?"
+   "Việc khó nhất trong [domain] của bạn là gì?"
+   "Bạn đang dùng công cụ gì? Cái gì khó chịu nhất?"
+   ```
 
-```
-Quy tắc: 1 need = 1 card (post-it method)
-Group theo category (functional / emotional / social)
-```
+2. **Liệt kê TẤT CẢ needs** (không lọc, không đánh giá):
+   - Sử dụng post-it method: 1 need = 1 card
+   - Group theo category
 
-### Bước 2: Prioritize bằng Impact × Frequency
+3. **Prioritize** bằng Impact × Frequency matrix:
 
 ```
               Frequency CAO          Frequency THẤP
@@ -156,57 +97,21 @@ THẤP         │  (automate)      │  (waste)         │
              └──────────────────┴──────────────────┘
 ```
 
-### Bước 3: RICE Scoring (cho top 10 needs)
-
-```
-RICE Score = (Reach × Impact × Confidence) ÷ Effort
-
-Reach:      Bao nhiêu user/tháng bị ảnh hưởng? (số cụ thể)
-Impact:     0.25 (minimal) → 0.5 (low) → 1 (medium) → 2 (high) → 3 (massive)
-Confidence: 100% (data chắc) → 80% → 50% (gut feeling)
-Effort:     Bao nhiêu person-weeks để solve?
-```
-
-### Bước 4: Kano Check (optional)
-
-📚 **Chi tiết Kano Model**: `resources/prioritization.md`
-
-```
-BASIC (phải có):     Không có = user BỎ ĐI, có = không thêm giá trị
-PERFORMANCE (hơn):   Càng cao = càng hài lòng (linear)
-EXCITEMENT (wow):    Không mong đợi nhưng có = DELIGHT
-```
-
-**Output tầng 5:** Danh sách needs xếp hạng từ cao → thấp + RICE scores
+**Output tầng 5:** Danh sách needs xếp hạng từ cao → thấp
 
 ---
 
-## TẦNG 6: UNMET NEEDS ⭐ — "Cái gì CHƯA AI solve?"
+## Tầng 6: UNMET NEEDS ⭐ — "Cái gì CHƯA AI solve?"
 
-### 3 câu hỏi filter (cho từng need)
+**3 câu hỏi filter (cho từng need trong danh sách):**
 
 | # | Câu hỏi | "Có" → | "Không" → |
 |---|---------|--------|-----------|
-| 1 | "Đã có ai solve ĐÚNG chưa?" | LOẠI (đã có solution) | GIỮ |
+| 1 | "Đã có ai solve chưa?" | LOẠI (đã có solution) | GIỮ |
 | 2 | "Có trong khả năng mình không?" | GIỮ | LOẠI (ngoài scope) |
-| 3 | "Mình có thể solve HIỆU QUẢ HƠN không?" | ⭐ UNMET NEED! | LOẠI (không differentiate) |
+| 3 | "Mình có thể solve hơn competitor?" | ⭐ UNMET NEED! | LOẠI (không differentiate) |
 
-### Opportunity Scoring
-
-Cho mỗi unmet need, tính:
-
-```
-Opportunity Score = Importance + (Importance - Satisfaction)
-
-Importance:   User đánh giá tầm quan trọng (1-10)
-Satisfaction: User đánh giá mức hài lòng hiện tại (1-10)
-
-Score > 15: ⭐ Over-served opportunities (chưa ai giải quyết triệt để)
-Score 10-15: 🟡 Potential opportunities
-Score < 10: ❌ Table stakes (đã được serve đúng)
-```
-
-### Output Format
+**Output format:**
 
 ```
 📋 UNMET NEEDS ANALYSIS — [Project]
@@ -215,9 +120,8 @@ Score < 10: ❌ Table stakes (đã được serve đúng)
 Need: _______________
   ├ Đã có ai solve? [Có/Không] → [Ai?]
   ├ Trong khả năng? [Có/Không] → [Tại sao?]
-  ├ Solve hiệu quả hơn?  [Có/Không] → [Bằng cách nào?]
-  ├ Opportunity Score: ___
-  └ → STATUS: [⭐ UNMET / ❌ LOẠI / 🟡 MAYBE]
+  └ Solve hơn competitor?  [Có/Không] → [Bằng cách nào?]
+  → STATUS: [⭐ UNMET / ❌ LOẠI / 🟡 MAYBE]
 
 ... (repeat for each need)
 
@@ -225,6 +129,60 @@ Need: _______________
 UNMET NEEDS FOUND: [số]
 → Đây là CƠ HỘI KINH DOANH → input cho @pmf-validator
 ```
+
+---
+
+## RESOURCE: INTERVIEW SCRIPT (Tiếng Việt, 15-20 phút)
+
+> Script dùng khi interview user để validate tầng 4-6.
+> Gọi điện / gặp mặt / Zoom. KHÔNG dùng form — cần follow-up questions.
+
+### Mở đầu (2 phút)
+```
+"Chào anh/chị [tên], cảm ơn đã dành thời gian.
+Tôi đang tìm hiểu về [domain] để build 1 công cụ hỗ trợ.
+Không có câu trả lời đúng/sai — tôi muốn hiểu trải nghiệm thật của anh/chị.
+Cuộc nói chuyện khoảng 15 phút, bắt đầu nhé?"
+```
+
+### Phần 1: Context + Behavior (5 phút)
+```
+1. "Anh/chị làm gì liên quan [domain]?" (→ demographic + role)
+2. "Thường thì khi cần [task], anh/chị làm thế nào?" (→ behavior)
+3. "Mức độ thường xuyên?" (→ frequency)
+4. "Đang dùng công cụ/dịch vụ gì để hỗ trợ?" (→ current solution)
+```
+
+### Phần 2: Pain Points (5 phút)
+```
+5. "Có gì KHÔNG HÀI LÒNG với cách hiện tại?" (→ pain point)
+6. "Nếu có đũa thần, anh/chị muốn thay đổi gì?" (→ ideal state)
+7. "Lần gần nhất gặp khó khăn với [task] là khi nào? Chuyện gì xảy ra?"
+   (→ specific story, CỰC GIÁ TRỊ)
+```
+
+### Phần 3: Willingness to Pay (3 phút)
+```
+8. "Nếu có tool giải quyết [pain point], anh/chị có dùng không?"
+9. "Sẵn sàng trả bao nhiêu / tháng cho giải pháp đó?"
+10. "Đã từng trả tiền cho công cụ tương tự chưa? Bao nhiêu?"
+```
+
+### Kết thúc (2 phút)
+```
+"Cảm ơn anh/chị! Có gì anh/chị muốn chia sẻ thêm không?
+Khi tool sẵn sàng, anh/chị có muốn thử trước không?"
+(→ lấy early adopter)
+```
+
+### Hướng dẫn phân tích sau interview
+
+| Sau 5 interviews | Tìm |
+|-------------------|-----|
+| **Patterns** | 3+ người nói cùng 1 pain point = real need |
+| **Outliers** | 1 người nói khác = có thể là edge case hoặc insight mới |
+| **Quotes** | Ghi lại câu nói hay → dùng cho marketing sau |
+| **Numbers** | Bao nhiêu % sẵn sàng trả tiền? Trả bao nhiêu? |
 
 ---
 
@@ -242,10 +200,6 @@ UNMET NEEDS FOUND: [số]
 
 ## KHỞI ĐỘNG (INITIALIZATION)
 
-> **Error handling**: Nếu user chưa có data → guide dùng forum/review analysis thay vì skip.
-> Nếu không tìm thấy unmet needs → quay lại validate segments với data mới.
-> Nếu thiếu interview data → cảnh báo confidence thấp, yêu cầu minimum 5 conversations.
-
 ```
 🔍 User Discovery — Product Tower Tầng 4-6
 
@@ -253,48 +207,83 @@ Anh đang build cho ai? Cho tao biết:
 1. Target segments đã chọn (từ @market-segmentation)
 2. Đã nói chuyện với user thật chưa? Bao nhiêu người?
 3. Có data nào (analytics, survey, feedback) chưa?
-4. Đã có customer journey map chưa?
 
-Tao sẽ giúp:
-✅ Build personas (BAG framework + JTBD)
-✅ Map customer journey (5 giai đoạn)
-✅ Liệt kê + prioritize user needs (Impact×Frequency + RICE)
-✅ Tìm unmet needs (3 câu hỏi filter + Opportunity scoring)
+Tao sẽ giúp build personas → map needs → tìm unmet needs.
 ```
-
----
-
-## ANTI-PATTERNS
-
-| # | Sai | Đúng |
-|---|-----|------|
-| 1 | Build persona từ giả định | Phải có data (dù ít — 5 interviews) |
-| 2 | Nhầm Segment = Persona | Segment = demographic, Persona = behavioral |
-| 3 | Hỏi "bạn CÓ MUỐN feature X?" | Hỏi "lần cuối gặp vấn đề Y là khi nào?" (Mom Test) |
-| 4 | Liệt kê needs nhưng không prioritize | RICE scoring cho top 10 |
-| 5 | "Tôi biết user cần gì" | Solo founder trap — NGUY HIỂM NHẤT |
-| 6 | Skip journey map | Journey map = tìm ra touchpoint đau nhất |
 
 ---
 
 # Examples
 
-Xem thư mục `examples/` để tham khảo 3 ví dụ chi tiết:
+## Ví dụ 1: BĐS — Có interview data
 
-### Example: BDSmetro (Medium)
-**Input**: Segments từ @market-segmentation: investors 35-50, first-time buyers
-**Output**: 2 personas (BAG), journey map, 8 needs prioritized, 3 unmet needs
-📚 Chi tiết: `examples/example_bds_metro.md`
+**Input:** "Tao đã interview 7 người mua nhà lần đầu ở khu metro HCM. Data đây."
 
-### Example: TaskFlow SaaS (Simple)
-**Input**: Segments: CTO startup, Tech Lead enterprise
-**Output**: 2 personas, 6 needs, top unmet: "auto status từ Git"
-📚 Chi tiết: `examples/example_saas_b2b.md`
+**Output:**
+```
+🔍 USER DISCOVERY — BDSmetro (First-time Buyer segment)
 
-### Example: LocalBite F&B (Complex)
-**Input**: 2-sided segments: Foodie explorers, Quán nhỏ owners
-**Output**: 4 personas (2 demand + 2 supply), chicken-egg analysis, 5 unmet needs
-📚 Chi tiết: `examples/example_fnb_local.md`
+T4. PERSONAS (from 7 interviews):
+
+┌─────────────────────────────────────────┐
+│ PERSONA 1: "So sánh kỹ Tùng"           │
+├─────────────────────────────────────────┤
+│ Demo:      IT, 28 tuổi, 25-30tr/tháng  │
+│ Goal:      Mua căn đầu tiên, ở lâu dài │
+│ Behavior:  Search 3-5 trang, so giá,   │
+│            xem review, cuối tuần đi coi │
+│ Pain:      "Giá trên web khác giá thật" │
+│ Touch:     Zalo group, batdongsan.com.vn│
+│ Quote:     "Tao mất 3 tháng chỉ để biết│
+│            giá thật khu này bao nhiêu"  │
+│ Source:    👤 Interview #2, #5, #7      │
+└─────────────────────────────────────────┘
+
+T5. USER NEEDS (Impact × Frequency):
+| # | Need | Impact | Freq | Priority | Source |
+|---|------|--------|------|----------|--------|
+| 1 | Giá thật (không fake) | ⭐ CAO | CAO | ⭐ MUST SOLVE | 👤 7/7 nói |
+| 2 | So sánh khu vực nhanh | CAO | CAO | ⭐ MUST SOLVE | 👤 5/7 nói |
+| 3 | Biết tiện ích quanh | THẤP | CAO | 🟢 CONVENIENCE | 👤 3/7 nói |
+
+T6. UNMET NEEDS:
+| Need | Đã có solve? | Khả năng? | Hơn competitor? | Status |
+|------|-------------|-----------|-----------------|--------|
+| Giá thật | ❌ Không (web toàn giá ảo) | ✅ Có (crawl + verify) | ✅ Differentiate | ⭐ UNMET |
+| So sánh | 🟡 Partial (batdongsan có nhưng UX kém) | ✅ Có | ✅ Metro-focused | ⭐ UNMET |
+
+UNMET NEEDS: 2 → input cho @pmf-validator
+```
+
+## Ví dụ 2: E-wallet — Chưa có interview (desk research only)
+
+**Input:** "Tao target tiểu thương, chưa interview ai"
+
+**Output:**
+```
+🔍 USER DISCOVERY — E-wallet MSME
+
+⚠️ WARNING: Chưa interview user thật. Output sẽ tag 🤖 60%.
+   Recommend: interview 5+ tiểu thương trước khi proceed.
+
+T4. PERSONAS (🤖 AI inference — 60% confidence):
+
+┌─────────────────────────────────────────┐
+│ PERSONA 1: "Chị Lan Bán Vải" 🤖        │
+├─────────────────────────────────────────┤
+│ Demo:      Tiểu thương, 35-50, chợ     │
+│ Goal:      Thu tiền nhanh, không mất    │
+│ Behavior:  Dùng điện thoại cơ bản,     │
+│            chuyển khoản bằng SMS banking│
+│ Pain:      "Đếm tiền mặt cuối ngày mệt"│
+│ Source:    🤖 AI guess từ desk research │
+└─────────────────────────────────────────┘
+
+⚠️ Persona này cần validate bằng interview thật.
+   PMF penalty: -2 (desk research only)
+
+→ RECOMMEND: Đi chợ, nói chuyện 5 tiểu thương → re-run discovery
+```
 
 ---
 
@@ -303,11 +292,16 @@ Xem thư mục `examples/` để tham khảo 3 ví dụ chi tiết:
 - 🚫 **KHÔNG** build personas từ giả định — phải có data (dù ít)
 - 🚫 **KHÔNG** skip interview — minimum 5 conversations
 - 🚫 **KHÔNG** nhầm Segment với Persona (demographic ≠ behavioral)
-- 🚫 **KHÔNG** hỏi leading questions (Mom Test principle)
 - ✅ **LUÔN** hỏi "đã validate với user thật chưa?" cho mỗi need
 - ✅ **LUÔN** phân biệt: Need đã có solution vs Need chưa ai solve
-- ✅ **LUÔN** dùng RICE scoring cho top needs
 - ⚠️ **Solo founder trap**: Founder nghĩ mình biết user cần gì = NGUY HIỂM NHẤT
+
+## 🔄 ERROR RECOVERY
+- Nếu thiếu T3 filter → cảnh báo "Foundation chưa xong. Chạy @market-segmentation trước"
+- Nếu chỉ có desk research → proceed nhưng tag 🤖 60%, cảnh báo PMF penalty
+- Nếu interview < 5 người → cảnh báo "Chưa đủ sample. Patterns chưa reliable"
+- Nếu không tìm thấy unmet needs → suggest pivot segment hoặc broaden scope
+- Nếu user skip interview → tag toàn bộ output ⚠️ UNVALIDATED
 
 ---
 
@@ -317,12 +311,8 @@ Khi tầng 4-6 hoàn thành:
 ```
 ✅ Discovery hoàn thành.
    Personas: [list]
-   Customer Journey: [key touchpoints]
-   Prioritized Needs: [top 5 with RICE scores]
-   Unmet Needs: [list with opportunity scores]
+   Unmet Needs: [list]
 
-→ Bước tiếp: Chạy @pmf-validator để validate Value Proposition
+→ Bước tiếp: Chạy @pmf-validator để validate Value Proposition 
   và check Product-Market Fit signals.
 ```
-
-<!-- Generated by Skill Creator Ultra v1.0 -->
