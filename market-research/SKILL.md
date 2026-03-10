@@ -1,252 +1,363 @@
 ---
 name: market-research
+version: 2.1
 description: |
   Thu thập data thị trường để feed vào Product Tower T1-T9.
-  Product Tower Tầng 0 (Data Foundation). 2 modes:
-  EXPRESS (AI tự cook) hoặc PRO (NotebookLM RAG hub).
-  Output: data/*.md → Product Tower T1-T9 consume trực tiếp.
+  Product Tower Tầng 0 (Data Foundation).
+  Workflow: Google Deep Research prompt → save t0_deep_research.md → Product Tower cascade.
+  Output: data/t0_deep_research.md → Product Tower T1-T9 consume trực tiếp.
 triggers:
   - "research market"
   - "thu thập data"
   - "market data"
   - "tầng 0"
   - "market research"
+  - "deep research"
+  - "T0"
 ---
 
 # PROTOCOL: MARKET_RESEARCH (Product Tower — Tầng 0)
 
 ## VAI TRÒ
 
-**Market Research Lead** — thu thập + tổ chức data thị trường.
+**Market Research Lead** — thu thập + tổ chức data thị trường bằng Deep Research.
 
-> **Output**: `data/*.md` per tier → T1-T9 đọc trực tiếp
-> **2 Modes**: EXPRESS (2 phút) hoặc PRO (30-60 phút)
-
----
-
-## ROUTING: EXPRESS vs PRO
-
-Khi user trigger T0, **HỎI NGAY**:
-
-```
-🔍 Market Research — Tầng 0
-
-Anh muốn chạy mode nào?
-
-🐣 EXPRESS (2 phút) — AI tự research từ knowledge.
-   Dùng khi: test nhanh, ý tưởng mới, chưa có data.
-   Output: 9 files .md (desk research quality).
-
-🦅 PRO (30-60 phút) — NotebookLM RAG pipeline.
-   Dùng khi: project thật, cần cited sources, có PDFs/reports.
-   Output: 9 files .md (real data, cited).
-
-→ Gõ "express" hoặc "pro".
-```
+> **Output**: `data/t0_deep_research.md` → Product Tower T1-T9 đọc trực tiếp
+> **Tool**: Google Deep Research (Gemini Advanced) hoặc tương đương
+> **Thời gian**: 2-10 phút chạy Deep Research + 10 phút review
 
 ---
 
-## MODE 1: EXPRESS 🐣 (AI Self-Research)
+## WORKFLOW: DEEP RESEARCH → FILL DATA
 
-### Khi nào dùng
-- Ý tưởng mới, cần validate nhanh
-- Chưa có data/reports
-- Muốn test Product Tower flow trước
-- Non-technical founder
-
-### Input cần từ user
-```
-1. Lĩnh vực gì? (VD: "F&B", "SaaS", "BĐS")
-2. Thị trường nào? (VD: "HCMC", "Việt Nam", "SEA")
-3. Vốn bao nhiêu? (VD: "100 triệu", "$10K")
-4. (Optional) Ý tưởng cụ thể? (VD: "cơm văn phòng delivery")
-```
-
-### AI tự generate 9 files
-```bash
-mkdir -p [project]/data
-```
-
-AI tự cook từ knowledge → output:
-
-| File | Nội dung | Từ đâu |
-|------|---------|--------|
-| `t1_target_market.md` | Market size, growth, cycle | AI knowledge + web |
-| `t2_segments.md` | 3-5 buyer segments | AI analysis |
-| `t3_filter.md` | Decision matrix, keep/discard | AI reasoning |
-| `t4_personas.md` | 2-3 personas with pain points | AI synthesis |
-| `t5_user_needs.md` | Top 7-10 needs ranked | AI ranking |
-| `t6_unmet_needs.md` | Gaps in existing solutions | AI competitive analysis |
-| `t7_pmf.md` | Demand signals, WTP, PMF gate | AI assessment |
-| `t8_features.md` | MoSCoW (budget-aware) | AI scoping |
-| `t9_user_stories.md` | INVEST stories + AC | AI writing |
-
-> ⚠️ **EXPRESS = starting point.** Data chưa validated.
-> Mỗi file ghi rõ `Source: AI-generated — cần validate`.
-> Upgrade lên PRO mode khi project serious.
-
----
-
-## MODE 2: PRO 🦅 (NotebookLM Pipeline)
-
-### Khi nào dùng
-- Project thật, cần data có nguồn
-- Đã có PDFs, reports, URLs
-- Cần cited sources cho investor deck
-- Technical user biết CLI
-
-### Yêu cầu
-- `notebooklm-py` v0.3.3+ cài sẵn
-- `notebooklm login` đã authenticate
-
-### KIẾN TRÚC
+### Kiến trúc
 
 ```
-NotebookLM (5 notebooks/project)
-│  📓 T0 - Raw Research      ← PDFs, URLs, YouTube, Sheets
-│  📓 T1-3 - Market Segments ← segment analysis
-│  📓 T4-6 - User Discovery  ← interviews, surveys
-│  📓 T7 - PMF               ← validation data
-│  📓 T8-9 - Features        ← stories, backlog
-│
-│  👤 Founder + 👥 Team + 🤖 Deep Research → cùng nạp data
-│
-└──► notebooklm ask "..." → save thẳng .md
-                │
-                ▼
-     [project]/data/*.md  (cached snapshots)
-                │
-                ▼
-     Product Tower T1-T9 skills READ .md files
+User input (industry + market)
+        │
+        ▼
+┌─────────────────────────────┐
+│  MEGA PROMPT (7 phần)       │
+│  Copy → Fill [PLACEHOLDER]  │
+│  → Paste vào Deep Research  │
+└──────────┬──────────────────┘
+           │ 2-10 phút
+           ▼
+┌─────────────────────────────┐
+│  Deep Research Output       │
+│  (50-100KB, 40+ citations)  │
+└──────────┬──────────────────┘
+           │
+           ▼
+┌─────────────────────────────┐
+│  data/t0_deep_research.md   │
+│  Structured 7 sections      │
+│  Confidence: 📊 80%         │
+└──────────┬──────────────────┘
+           │
+           ▼
+   Product Tower T1-T9 skills
+   READ t0_deep_research.md
 ```
 
 ---
 
-## NOTEBOOK SETUP (1 lần per project)
+## MEGA PROMPT TEMPLATE
 
-```bash
-notebooklm create "[Project] T0 - Raw Research"
-notebooklm create "[Project] T1-3 - Market Segments"
-notebooklm create "[Project] T4-6 - User Discovery"
-notebooklm create "[Project] T7 - PMF Validation"
-notebooklm create "[Project] T8-9 - Feature Scope"
-```
+> Copy prompt dưới đây, thay `[PLACEHOLDER]`, paste vào Google Deep Research.
 
-| Notebook | Sources gì | Ai upload |
-|----------|-----------|-----------|
-| **T0 Raw** | PDFs, reports, URLs, YouTube | Founder + Deep Research |
-| **T1-3 Segments** | T0 output + segment data | AI + Founder |
-| **T4-6 Users** | Interview notes, surveys | Founder + Team |
-| **T7 PMF** | Survey data, metrics | Founder + KH |
-| **T8-9 Features** | User stories, wireframes | Founder |
+````markdown
+Tôi đang nghiên cứu thị trường để xây dựng sản phẩm: [TÊN SẢN PHẨM]
+
+Thị trường mục tiêu: [QUỐC GIA / KHU VỰC]
+Ngành: [NGÀNH / LĨNH VỰC]
+
+Hãy nghiên cứu TOÀN DIỆN và trả lời TẤT CẢ các phần sau. Mỗi data point PHẢI có source link.
 
 ---
 
-## PRO MODE: 4-PHASE WORKFLOW
+## PHẦN 1: MARKET SIZE & GROWTH (cho T1 Target Market)
 
-### PHASE 1: SEED (30 phút)
+1. Quy mô thị trường (TAM/SAM/SOM):
+   - Global market size (USD, năm gần nhất)
+   - Regional market size ([KHU VỰC])
+   - Local market size ([QUỐC GIA]) nếu có
+   - Projected growth (CAGR, forecast đến 2030)
 
-```bash
-notebooklm use <T0_ID>
-notebooklm source add "./savills_2025.pdf"
-notebooklm source add "https://competitor-site.com"
-notebooklm source add "https://youtube.com/watch?v=relevant"
-notebooklm source add "https://docs.google.com/spreadsheets/d/..."
+2. Market drivers (5 yếu tố thúc đẩy tăng trưởng)
+3. Market inhibitors (5 yếu tố kìm hãm)
+4. Timing catalysts (tại sao BÂY GIỜ là đúng lúc)
+
+---
+
+## PHẦN 2: SEGMENTS & CUSTOMER PROFILES (cho T2-T3 Segmentation)
+
+1. Phân khúc khách hàng hiện tại (3-5 segments):
+   - Ai mua? (demographic + behavioral)
+   - Bao nhiêu người?
+   - Chi bao nhiêu/tháng/năm?
+   - Mua ở đâu? (channels)
+
+2. Segment nào tăng trưởng nhanh nhất?
+3. Segment nào bị underserved (chưa ai phục vụ tốt)?
+4. Pricing sensitivity theo từng segment
+
+---
+
+## PHẦN 3: COMPETITOR LANDSCAPE (cho T0 + T6 Unmet Needs)
+
+1. Top 10 competitors (trực tiếp + gián tiếp):
+   - Tên, website, founding year
+   - Funding/revenue (nếu có)
+   - Pricing model + giá cụ thể
+   - Điểm mạnh / điểm yếu
+   - Target segment chính
+
+2. Competitive positioning map:
+   - Trục X: [gợi ý: Price low→high]
+   - Trục Y: [gợi ý: Feature basic→advanced]
+
+3. Gap analysis: Điều gì CHƯA AI LÀM?
+4. Barriers to entry cho new players
+
+---
+
+## PHẦN 4: USER BEHAVIOR & NEEDS (cho T4-T5 Personas + Needs)
+
+1. Hành vi mua sắm/sử dụng hiện tại của khách hàng:
+   - Họ đang giải quyết vấn đề này bằng cách nào?
+   - Pain points lớn nhất (top 5)
+   - Frequency of need (daily/weekly/monthly)
+
+2. User journey hiện tại (từ phát hiện vấn đề → chọn giải pháp → mua → dùng)
+3. Willingness to pay: khách sẵn sàng trả bao nhiêu?
+4. Decision factors: họ chọn dựa trên gì? (giá/chất lượng/tốc độ/brand?)
+
+---
+
+## PHẦN 5: RISKS & FAILURES (cho Counter Search AB1)
+
+1. Case studies thất bại trong ngành (3-5 cases):
+   - Tên công ty, năm, lý do thất bại
+   - Bài học rút ra
+
+2. Rủi ro pháp lý / regulatory:
+   - Luật hiện hành liên quan
+   - Xu hướng regulatory (đang siết hay nới?)
+
+3. Rủi ro công nghệ:
+   - Tech stack đang thay đổi thế nào?
+   - Commoditization risk?
+
+4. Counter-arguments cho 3 giả định lạc quan nhất về thị trường này
+
+---
+
+## PHẦN 6: SUPPLY & DEMAND DYNAMICS (cho T1 + T3 Filter)
+
+1. Supply side: Ai đang cung cấp? Có đủ không? Bottleneck ở đâu?
+2. Demand side: Demand tăng hay giảm? Seasonal patterns?
+3. Price trends: Giá đang tăng hay giảm? Tại sao?
+4. Search trends: Google Trends cho [3-5 KEYWORDS CHÍNH] — rising hay declining?
+
+---
+
+## PHẦN 7: BUSINESS MODEL PATTERNS (cho T7 PMF + T8 Features)
+
+1. Revenue models phổ biến trong ngành:
+   - SaaS subscription
+   - Usage-based
+   - Commission/marketplace
+   - Freemium → premium
+
+2. Unit economics benchmark:
+   - CAC (Customer Acquisition Cost)
+   - LTV (Lifetime Value)
+   - Churn rate
+   - Payback period
+
+3. Go-to-market strategies đang hoạt động:
+   - Channels hiệu quả nhất
+   - Content marketing hay paid ads?
+   - Community-led hay sales-led?
+
+---
+
+## FORMAT YÊU CẦU
+
+- Mỗi data point phải có SOURCE LINK
+- Phân biệt: data thật (📊) vs estimate (🔮) vs opinion (💭)
+- Nếu không tìm được data cho [QUỐC GIA], dùng data regional hoặc global và ghi rõ
+- Ưu tiên data từ 2024-2026
+- Output bằng tiếng Việt, thuật ngữ chuyên ngành giữ tiếng Anh
+````
+
+---
+
+## CÁCH DÙNG (Step-by-Step)
+
+```
+Bước 1: Copy mega prompt ở trên
+Bước 2: Thay [PLACEHOLDER] bằng info sản phẩm cụ thể
+Bước 3: Paste vào Google Deep Research (Gemini Advanced)
+Bước 4: Đợi 2-10 phút để Deep Research chạy
+Bước 5: Save output → data/t0_deep_research.md
+Bước 6: Chạy Product Tower:
+        "chạy product tower cho [project], dùng data trong t0_deep_research.md"
 ```
 
-### PHASE 2: ENRICH (1-2 giờ)
+### Multi-source (Optional — nâng confidence)
 
-- NotebookLM Deep Research (web UI) → auto-add web sources
-- Apify Google Trends → CSV → Google Sheets → add vào notebook
-- Social scraping → add vào T4-6 notebook
+Nếu muốn tăng data quality, chạy thêm 1-2 Deep Research engine:
 
-### PHASE 3: EXTRACT → .md (30 phút)
-
-```bash
-# Tạo folder data
-mkdir -p [project]/data
-
-# Extract từ mỗi notebook → save .md
-notebooklm use <T0_ID>
-notebooklm ask "Market size, growth rate, cycle phase. Cite sources." > data/t1_target_market.md
-notebooklm ask "List 3-5 buyer segments: demographics, behavior, spending." > data/t2_segments.md
-notebooklm ask "Which segments keep vs discard? 3 filter criteria." > data/t3_filter.md
-
-notebooklm use <T46_ID>
-notebooklm ask "3 user personas: goals, behaviors, pain points. Cite evidence." > data/t4_personas.md
-notebooklm ask "Top 10 user needs ranked by importance." > data/t5_user_needs.md
-notebooklm ask "Which needs NOT served by existing solutions?" > data/t6_unmet_needs.md
-
-notebooklm use <T7_ID>
-notebooklm ask "PMF evidence: demand signals, willingness to pay." > data/t7_pmf.md
-
-notebooklm use <T89_ID>
-notebooklm ask "MoSCoW feature prioritization from unmet needs." > data/t8_features.md
-notebooklm ask "User stories INVEST format for MUST features." > data/t9_user_stories.md
 ```
+Source 1: Google Gemini Deep Research (primary)     → 50-100KB
+Source 2: Grok Deep Search (cross-validate)          → 5-10KB  
+Source 3: Perplexity Pro Search (supplement)          → 5-10KB
 
-**Done. 9 lệnh = 9 files .md. Product Tower đọc trực tiếp.**
-
-### PHASE 4: HUMAN RESEARCH (1-2 tuần)
-
-5-10 interviews → upload notes vào T4-6 notebook → re-extract Phase 3.
-
-```bash
-notebooklm use <T46_ID>
-notebooklm source add "./interview_user1.pdf"
-# Re-run Phase 3 queries cho T4-T7
+→ Merge tất cả vào 1 file: data/t0_deep_research.md
+→ Ghi rõ source inventory ở đầu file
 ```
 
 ---
 
-## INCREMENTAL UPDATE (data mới hàng tuần)
+## OUTPUT FORMAT (data/t0_deep_research.md)
 
-```bash
-# 1. Add new sources vào notebook liên quan
-notebooklm use <T0_ID>
-notebooklm source add "./new_report.pdf"
+File output PHẢI có structure sau:
 
-# 2. Re-extract CHỈ notebooks có data mới
-notebooklm ask "Summarize NEW info not in previous analysis." > data/t1_target_market_update.md
+```markdown
+# T0: Deep Research — [TÊN SẢN PHẨM] [THỊ TRƯỜNG]
 
-# 3. Merge hoặc replace .md file cũ
+> **Product Tower T0 — Market Research Data**
+> **Ngày:** [YYYY-MM-DD]
+> **Sources:** [list Deep Research engines used]
+> **Confidence:** 📊 80% (cited research data)
+
+---
+
+## DATA SOURCES INVENTORY
+
+| # | Source | Type | Size | Coverage |
+|---|--------|------|------|----------|
+| 1 | [Engine 1] | [type] | [size] | [sections covered] |
+
+**Total citations:** [N]+ sources
+
+---
+
+## PHẦN 1: MARKET SIZE & GROWTH
+[data...]
+
+## PHẦN 2: SEGMENTS & CUSTOMER PROFILES
+[data...]
+
+## PHẦN 3: COMPETITOR LANDSCAPE
+[data...]
+
+## PHẦN 4: USER BEHAVIOR & NEEDS
+[data...]
+
+## PHẦN 5: RISKS & FAILURES (Counter-Search AB1 Data)
+[data...]
+
+## PHẦN 6: SUPPLY & DEMAND DYNAMICS
+[data...]
+
+## PHẦN 7: BUSINESS MODEL PATTERNS
+[data...]
+
+---
+
+## DATA SATURATION CHECK
+
+| Phần | Coverage | Sources | Confidence |
+|------|----------|---------|------------|
+| Market Size | ✅/⚠️/❌ | [N] sources | 📊/🤖 |
+| ... | ... | ... | ... |
+
+> **T0 Status: ✅ SATURATED / ⚠️ PARTIAL / ❌ INSUFFICIENT**
 ```
 
 ---
 
-## LOCAL FILE STRUCTURE
+## CONFIDENCE & PMF PENALTY
+
+| Data source | Tag | Confidence | PMF Penalty |
+|-------------|-----|------------|-------------|
+| Không có gì | — | 0% | ❌ Cannot run |
+| AI self-guess (không Deep Research) | 🤖 | 60% | -2.0 |
+| Deep Research (1 source) | 📊 | 80% | -1.0 |
+| Deep Research + Counter-search (AB1) | 📊 | 80% | -0.5 |
+| Deep Research + Full AB (AB1-AB4) | 📊👤 | 90%+ | 0 |
+
+> ✅ **LUÔN** ghi confidence tag trên mỗi data point trong output
+
+---
+
+## MAP VỚI 3-LOOP PROTOCOL
 
 ```
-[project]/data/
-├── t1_target_market.md
-├── t2_segments.md
-├── t3_filter.md
-├── t4_personas.md
-├── t5_user_needs.md
-├── t6_unmet_needs.md
-├── t7_pmf.md
-├── t8_features.md
-├── t9_user_stories.md
-└── _notebook_ids.json    ← { "T0": "id", "T13": "id", ... }
+LOOP 1 — Deep Research (data/loop1/)
+   Chạy mega prompt → save t0_deep_research.md
+   AI chạy T1-T6 từ data này
+   Confidence: 📊 80% | PMF penalty: -1.0
+
+LOOP 2 — Counter-Research (data/loop2/)
+   AB1: search_web "thất bại [industry]"
+   AB2: @sparring-partner challenge
+   Update t0_deep_research.md (Phần 5 enriched)
+   Tạo delta_report.md
+   Confidence: 📊 80% | PMF penalty: -0.5
+
+LOOP 3 — Real Human Data (data/loop3/)
+   AB3: Field observation
+   AB4: 5+ interviews (Mom Test)
+   Validate/kill hypotheses từ Loop 1-2
+   Tạo delta_report.md
+   Confidence: 👤 90%+ | PMF penalty: 0
 ```
+
+---
+
+## DATA SATURATION CRITERIA
+
+T0 đủ data khi:
+
+| Criteria | Threshold | Check |
+|----------|-----------|-------|
+| Tất cả 7 phần có data | 7/7 sections filled | □ |
+| Mỗi phần có ≥3 cited sources | ≥21 total citations | □ |
+| TAM/SAM/SOM có số cụ thể | 3 numbers with sources | □ |
+| ≥3 competitors với detail | Name + funding + pricing | □ |
+| ≥3 user pain points | With survey % hoặc quote | □ |
+| ≥1 failure case study | With year + reason | □ |
+| Business model benchmarks | CAC, LTV, churn | □ |
+
+> Nếu ≥5/7 criteria pass → **T0 SATURATED** → Proceed to T1-T9
+> Nếu <5/7 → Chạy thêm Deep Research hoặc manual research
 
 ---
 
 ## TOOL REFERENCE
 
-| Tool | Dùng cho | Phase |
-|------|----------|-------|
-| `notebooklm-py` | RAG hub + extract → .md | 1-3 |
-| `Apify` | Google Trends, social scraping | 2 |
-| `OSINT` | Deep competitor intel | 2 |
-| Manual Interview | PMF validation | 4 |
+| Tool | Dùng cho | Khi nào |
+|------|----------|---------|
+| Google Deep Research (Gemini Advanced) | Primary data collection | Loop 1 |
+| Grok Deep Search | Cross-validation | Loop 1 (optional) |
+| Perplexity Pro | Supplement | Loop 1 (optional) |
+| `search_web` | Counter-search (failures, risks) | Loop 2 (AB1) |
+| `@sparring-partner` | Red team challenge | Loop 2 (AB2) |
+| Manual interview | Real human validation | Loop 3 (AB4) |
+| Field observation | Market ground truth | Loop 3 (AB3) |
 
 ---
 
 ## CONSTRAINTS
 
-- 🚫 **KHÔNG** giả định — query notebook, cite sources
-- 🚫 **KHÔNG** skip Phase 4 interviews
-- 🚫 **KHÔNG** re-process unchanged notebooks
-- ✅ **LUÔN** save output thẳng .md (không qua ETL layer)
-- ⚠️ Free: 50 sources/notebook × 5 = 250 total | 50 chats/day | 10 Deep Research/month
+- 🚫 **KHÔNG** giả định data — phải có source hoặc ghi rõ 🤖
+- 🚫 **KHÔNG** skip Phần 5 (Risks & Failures) — đây là AB1 data
+- 🚫 **KHÔNG** chạy T7 PMF nếu T0 chưa SATURATED
+- ✅ **LUÔN** save output thẳng `data/t0_deep_research.md`
+- ✅ **LUÔN** ghi Data Sources Inventory ở đầu file
+- ✅ **LUÔN** chạy Data Saturation Check ở cuối file
+- ✅ **LUÔN** tag confidence (📊/🤖/🔮/💭) trên mỗi data point
